@@ -309,14 +309,13 @@ function ItemPicker({ schemas, onAdd, label }) {
         <div className="picker-panel">
           <input autoFocus type="text" placeholder={`Search ${label.toLowerCase()}…`} value={search} onChange={e=>setSearch(e.target.value)} className="picker-search" />
           <div className="picker-list">
-            {filtered.slice(0,60).map(id=>(
+            {filtered.map(id=>(
               <button key={id} className="picker-item" onClick={()=>handlePick(id)}>
                 <span className="picker-title">{schemas[id]?.title||id}</span>
                 <span className="picker-id">{schemas[id]?.payload?.declarationtype||schemas[id]?.payload?.payloadtype||id}</span>
               </button>
             ))}
             {!filtered.length && <div className="picker-empty">No matches</div>}
-            {filtered.length>60 && <div className="picker-more">…refine to see more</div>}
           </div>
         </div>
       )}

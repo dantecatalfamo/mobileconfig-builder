@@ -40,19 +40,28 @@ if (shouldPull) {
  * Break YAML anchor shared-reference cycles by always producing a fresh clone
  * for every node. Uses a call-stack WeakSet: objects currently being visited
  * are in the set; after cloning all children we remove them, so sibling
- * branches get a full copy while true cycles are truncated to null.
+ * branches get a full copy.
+ *
+ * When a cycle is detected, rather than immediately returning null, we re-enter
+ * with a fresh stack (up to maxRecursion times). This unrolls the cycle by one
+ * extra level, so back-referenced subkey definitions are populated one level
+ * deeper before finally terminating with null.
  */
-function deref(obj) {
-  const stack = new WeakSet()
-  function walk(o) {
+function deref(obj, maxRecursion = 1) {
+  function walk(o, stack, depth) {
     if (o === null || typeof o !== 'object') return o
-    if (stack.has(o)) return null
+    if (stack.has(o)) {
+      if (depth < maxRecursion) return walk(o, new WeakSet(), depth + 1)
+      return null
+    }
     stack.add(o)
-    const result = Array.isArray(o) ? o.map(walk) : Object.fromEntries(Object.entries(o).map(([k, v]) => [k, walk(v)]))
+    const result = Array.isArray(o)
+      ? o.map(v => walk(v, stack, depth))
+      : Object.fromEntries(Object.entries(o).map(([k, v]) => [k, walk(v, stack, depth)]))
     stack.delete(o)
     return result
   }
-  return walk(obj)
+  return walk(obj, new WeakSet(), 0)
 }
 
 function loadYaml(filepath) {

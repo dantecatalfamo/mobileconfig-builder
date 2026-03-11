@@ -178,9 +178,13 @@ function LabelWithHelp({ label, required, help }) {
 }
 
 function ArrayField({ keyDef, value = [], onChange }) {
+  if (keyDef.subkeys === null) {
+    return <span className="dict-empty"><em>Nested items not configurable (recursive schema)</em></span>
+  }
   const itemSchema = keyDef.subkeys?.[0]
   const itemIsDic = itemSchema?.type === '<dictionary>'
-  const add = () => onChange([...value, itemIsDic ? {} : ''])
+  const itemIsArr = itemSchema?.type === '<array>'
+  const add = () => onChange([...value, itemIsDic ? {} : itemIsArr ? [] : ''])
   const remove = i => onChange(value.filter((_,idx)=>idx!==i))
   const update = (i,v) => onChange(value.map((x,idx)=>idx===i?v:x))
   return (
@@ -189,12 +193,19 @@ function ArrayField({ keyDef, value = [], onChange }) {
         <div key={i} className="array-item">
           {itemIsDic
             ? <div className="array-dict-item"><DictField keyDef={itemSchema} value={item} onChange={v=>update(i,v)} /></div>
+            : itemIsArr
+            ? <div className="array-dict-item">
+                {itemSchema.subkeys?.length
+                  ? <ArrayField keyDef={itemSchema} value={Array.isArray(item) ? item : []} onChange={v=>update(i,v)} />
+                  : <span className="dict-empty"><em>Nested items not configurable (recursive schema)</em></span>
+                }
+              </div>
             : <input type="text" value={item} placeholder={itemSchema?.title||itemSchema?.key||'Value'} onChange={e=>update(i,e.target.value)} />
           }
           <button className="rm-btn" onClick={()=>remove(i)}>×</button>
         </div>
       ))}
-      <button className="add-btn" onClick={add}>+ Add item</button>
+      <button className="add-btn" onClick={add}>+ Add {itemSchema?.title || itemSchema?.key || 'item'}</button>
     </div>
   )
 }
@@ -338,13 +349,15 @@ function MDMMode() {
   const [payloads, setPayloads] = useState([])
   const [showPreview, setShowPreview] = useState(false)
   const [showErrors, setShowErrors] = useState(false)
+  const [touched, setTouched] = useState(false)
 
   const addPayload = id => {
     const schema = schemasData.profiles[id]
+    setTouched(true)
     setPayloads(ps=>[...ps,{ id:crypto.randomUUID(), profileId:id, payloadType:schema?.payload?.payloadtype||id, values:{} }])
   }
-  const updatePayload = (id,values) => setPayloads(ps=>ps.map(p=>p.id===id?{...p,values}:p))
-  const removePayload = id => setPayloads(ps=>ps.filter(p=>p.id!==id))
+  const updatePayload = (id,values) => { setTouched(true); setPayloads(ps=>ps.map(p=>p.id===id?{...p,values}:p)) }
+  const removePayload = id => { setTouched(true); setPayloads(ps=>ps.filter(p=>p.id!==id)) }
 
   const { metaErrors, payloadErrors } = useMemo(()=>validateMDM(meta,payloads),[meta,payloads])
   const isValid = !metaErrors.length && !Object.keys(payloadErrors).length
@@ -359,6 +372,7 @@ function MDMMode() {
   const totalErrors = metaErrors.length + Object.values(payloadErrors).reduce((n,e)=>n+e.length,0)
 
   const handleDownload = () => {
+    setTouched(true)
     if (!isValid) { setShowErrors(true); return }
     const blob = new Blob([plistOutput],{type:'application/x-apple-aspen-config'})
     const url = URL.createObjectURL(blob)
@@ -366,7 +380,7 @@ function MDMMode() {
     URL.revokeObjectURL(url)
   }
 
-  const setMetaField = (k,v) => setMeta(m=>({...m,[k]:v}))
+  const setMetaField = (k,v) => { setTouched(true); setMeta(m=>({...m,[k]:v})) }
   const hasMetaError = f => showErrors && metaErrors.some(e=>e.toLowerCase().includes(f.toLowerCase()))
 
   return (
@@ -379,10 +393,10 @@ function MDMMode() {
           <button className={`preview-toggle ${showPreview?'active':''}`} onClick={()=>setShowPreview(s=>!s)} disabled={!plistOutput}>
             {showPreview?'Hide Preview':'Preview XML'}
           </button>
-          <button className={`download-header-btn ${isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}
-            title={!isValid?`${totalErrors} required field${totalErrors!==1?'s':''} missing`:`Download ${filename}`}>
+          <button className={`download-header-btn ${!touched?'btn-neutral':isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}
+            title={touched&&!isValid?`${totalErrors} required field${totalErrors!==1?'s':''} missing`:`Download ${filename}`}>
             ⬇ Download .mobileconfig
-            {!isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
+            {touched && !isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
           </button>
         </div>
       </div>
@@ -478,9 +492,11 @@ function DeclarativeMode() {
   const [declarations, setDeclarations] = useState([])
   const [showPreview, setShowPreview] = useState(false)
   const [showErrors, setShowErrors] = useState(false)
+  const [touched, setTouched] = useState(false)
 
   const addDeclaration = id => {
     const schema = schemasData.declarations[id]
+    setTouched(true)
     setDeclarations(ds=>[...ds,{
       id: crypto.randomUUID(),
       declarationId: id,
@@ -489,8 +505,8 @@ function DeclarativeMode() {
       values: {},
     }])
   }
-  const updateDeclaration = (id, patch) => setDeclarations(ds=>ds.map(d=>d.id===id?{...d,...patch}:d))
-  const removeDeclaration = id => setDeclarations(ds=>ds.filter(d=>d.id!==id))
+  const updateDeclaration = (id, patch) => { setTouched(true); setDeclarations(ds=>ds.map(d=>d.id===id?{...d,...patch}:d)) }
+  const removeDeclaration = id => { setTouched(true); setDeclarations(ds=>ds.filter(d=>d.id!==id)) }
 
   const declErrors = useMemo(()=>validateDeclarative(declarations),[declarations])
   const isValid = !Object.keys(declErrors).length && declarations.length > 0
@@ -504,6 +520,7 @@ function DeclarativeMode() {
   const totalErrors = Object.values(declErrors).reduce((n,e)=>n+e.length,0)
 
   const handleDownload = () => {
+    setTouched(true)
     if (!isValid) { setShowErrors(true); return }
     const blob = new Blob([jsonOutput],{type:'application/json'})
     const url = URL.createObjectURL(blob)
@@ -522,10 +539,10 @@ function DeclarativeMode() {
           <button className={`preview-toggle ${showPreview?'active':''}`} onClick={()=>setShowPreview(s=>!s)} disabled={!jsonOutput}>
             {showPreview?'Hide Preview':'Preview JSON'}
           </button>
-          <button className={`download-header-btn ${isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}>
+          <button className={`download-header-btn ${!touched?'btn-neutral':isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}>
             ⬇ Download declarations.json
-            {!isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
-            {!isValid && !declarations.length && <span className="error-badge">!</span>}
+            {touched && !isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
+            {touched && !isValid && !declarations.length && <span className="error-badge">!</span>}
           </button>
         </div>
       </div>

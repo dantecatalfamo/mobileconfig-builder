@@ -409,6 +409,15 @@ textarea { resize: vertical; }
   white-space: nowrap;
   border: 1px solid;
 }
+.download-header-btn.btn-neutral {
+  background: var(--surface3);
+  border-color: var(--border);
+  color: var(--text2);
+}
+.download-header-btn.btn-neutral:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .download-header-btn.btn-valid {
   background: rgba(63,185,80,0.15);
   border-color: var(--green);

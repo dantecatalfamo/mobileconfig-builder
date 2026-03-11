@@ -103,7 +103,7 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-.field-toggle { align-items: center; display: flex; gap: 12px; }
+.field-toggle { display: flex; gap: 12px; }
 .field-toggle label:first-child { flex: 1; }
 
 /* ── Fields ── */

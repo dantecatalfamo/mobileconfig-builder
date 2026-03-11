@@ -115,15 +115,28 @@ function generateDeclarationJSON(declarations) {
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 
+function isEmpty(v) { return v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length) }
+
+function collectMissing(keys, values) {
+  const missing = []
+  for (const k of (keys || [])) {
+    if (!k.key) continue
+    const v = values?.[k.key]
+    if (k.presence === 'required' && isEmpty(v)) missing.push(k.title || k.key)
+    if (k.type === '<dictionary>' && v != null && Array.isArray(k.subkeys))
+      missing.push(...collectMissing(k.subkeys, v))
+  }
+  return missing
+}
+
 function validateMDM(meta, payloads) {
   const metaErrors = []
   if (!meta.displayName?.trim()) metaErrors.push('Display Name is required')
   if (!meta.identifier?.trim()) metaErrors.push('Identifier is required')
   const payloadErrors = {}
   for (const p of payloads) {
-    const required = (schemasData.profiles[p.profileId]?.payloadkeys || []).filter(k => k.presence === 'required')
-    const missing = required.filter(k => { const v = p.values[k.key]; return v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length) })
-    if (missing.length) payloadErrors[p.id] = missing.map(k => k.title || k.key)
+    const missing = collectMissing(schemasData.profiles[p.profileId]?.payloadkeys, p.values)
+    if (missing.length) payloadErrors[p.id] = missing
   }
   return { metaErrors, payloadErrors }
 }
@@ -133,9 +146,7 @@ function validateDeclarative(declarations) {
   for (const d of declarations) {
     const errs = []
     if (!d.identifier?.trim()) errs.push('Identifier is required')
-    const required = (schemasData.declarations[d.declarationId]?.payloadkeys || []).filter(k => k.presence === 'required')
-    const missing = required.filter(k => { const v = d.values[k.key]; return v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length) })
-    missing.forEach(k => errs.push(k.title || k.key))
+    errs.push(...collectMissing(schemasData.declarations[d.declarationId]?.payloadkeys, d.values))
     if (errs.length) errors[d.id] = errs
   }
   return errors
@@ -210,22 +221,25 @@ function ArrayField({ keyDef, value = [], onChange }) {
   )
 }
 
-function DictField({ keyDef, value = {}, onChange }) {
+function DictField({ keyDef, value = {}, onChange, showErrors }) {
   const subkeys = keyDef.subkeys || []
   if (!subkeys.length) return <div className="dict-empty"><em>No sub-keys defined</em></div>
   return (
     <div className="dict-field">
-      {subkeys.map(sk => (
-        <div key={sk.key} className="sub-field">
-          <FieldLabel title={sk.title} keyName={sk.key} description={sk.content} required={sk.presence==='required'} />
-          <FieldInput keyDef={sk} value={value[sk.key]} onChange={v=>onChange({...value,[sk.key]:v})} />
-        </div>
-      ))}
+      {subkeys.map(sk => {
+        const isMissing = showErrors && sk.presence === 'required' && isEmpty(value[sk.key])
+        return (
+          <div key={sk.key} className={`sub-field ${isMissing ? 'field-missing' : ''}`}>
+            <FieldLabel title={sk.title} keyName={sk.key} description={sk.content} required={sk.presence==='required'} />
+            <FieldInput keyDef={sk} value={value[sk.key]} onChange={v=>onChange({...value,[sk.key]:v})} showErrors={showErrors} />
+          </div>
+        )
+      })}
     </div>
   )
 }
 
-function FieldInput({ keyDef, value, onChange }) {
+function FieldInput({ keyDef, value, onChange, showErrors }) {
   const inputType = getInputType(keyDef)
   const type = keyDef.type || '<string>'
   if (keyDef.rangelist) return (
@@ -241,7 +255,16 @@ function FieldInput({ keyDef, value, onChange }) {
     </label>
   )
   if (inputType==='array') return <ArrayField keyDef={keyDef} value={value} onChange={onChange} />
-  if (inputType==='dict') return <DictField keyDef={keyDef} value={value??{}} onChange={onChange} />
+  if (inputType==='dict') {
+    if (keyDef.presence !== 'required' && value == null)
+      return <button className="add-btn" onClick={()=>onChange({})}>+ Add {keyDef.title||keyDef.key}</button>
+    return (
+      <div className="dict-with-remove">
+        <DictField keyDef={keyDef} value={value??{}} onChange={onChange} showErrors={showErrors} />
+        {keyDef.presence !== 'required' && <button className="rm-dict-btn" onClick={()=>onChange(undefined)}>Remove</button>}
+      </div>
+    )
+  }
   if (inputType==='textarea'||type==='<data>') return (
     <textarea value={value??''} onChange={e=>onChange(e.target.value)} rows={3} placeholder={keyDef.title||keyDef.key} />
   )
@@ -254,7 +277,7 @@ function FieldInput({ keyDef, value, onChange }) {
 
 // ─── Shared payload/declaration form ─────────────────────────────────────────
 
-function ItemForm({ title, badge, description, payloadkeys, values, onChange, onRemove, errors }) {
+function ItemForm({ title, badge, description, payloadkeys, values, onChange, onRemove, errors, showErrors }) {
   const handleChange = useCallback((key, val) => onChange({...values,[key]:val}), [values, onChange])
   return (
     <div className={`payload-form ${errors.length>0?'has-errors':''}`}>
@@ -282,7 +305,7 @@ function ItemForm({ title, badge, description, payloadkeys, values, onChange, on
           return (
             <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
               <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} />
-              <FieldInput keyDef={keyDef} value={values[keyDef.key]} onChange={v=>handleChange(keyDef.key,v)} />
+              <FieldInput keyDef={keyDef} value={values[keyDef.key]} onChange={v=>handleChange(keyDef.key,v)} showErrors={showErrors} />
             </div>
           )
         })}
@@ -461,6 +484,7 @@ function MDMMode() {
                   payloadkeys={schema?.payloadkeys} values={p.values}
                   onChange={v=>updatePayload(p.id,v)} onRemove={()=>removePayload(p.id)}
                   errors={showErrors?(payloadErrors[p.id]||[]):[]}
+                  showErrors={showErrors}
                 />
               )
             })}
@@ -606,7 +630,7 @@ function DeclarativeMode() {
                       return (
                         <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
                           <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} />
-                          <FieldInput keyDef={keyDef} value={d.values[keyDef.key]} onChange={v=>updateDeclaration(d.id,{values:{...d.values,[keyDef.key]:v}})} />
+                          <FieldInput keyDef={keyDef} value={d.values[keyDef.key]} onChange={v=>updateDeclaration(d.id,{values:{...d.values,[keyDef.key]:v}})} showErrors={showErrors} />
                         </div>
                       )
                     })}

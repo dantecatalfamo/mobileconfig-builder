@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
 import { FieldLabel } from './FieldLabel'
 import { FieldInput } from './FormFields'
+import { OsSupportTable } from './OsSupportTable'
 
-export function ItemForm({ title, badge, description, payloadkeys, values, onChange, onRemove, errors, showErrors }) {
+export function ItemForm({ title, badge, description, payloadkeys, values, onChange, onRemove, errors, showErrors, payloadSupportedOS }) {
   const handleChange = useCallback((key, val) => onChange({...values,[key]:val}), [values, onChange])
   return (
     <div className={`payload-form ${errors.length>0?'has-errors':''}`}>
@@ -17,6 +18,7 @@ export function ItemForm({ title, badge, description, payloadkeys, values, onCha
         </div>
       </div>
       {description && <p className="payload-desc">{description}</p>}
+      <OsSupportTable payloadSupportedOS={payloadSupportedOS} payloadkeys={payloadkeys} />
       {errors.length>0 && (
         <div className="payload-errors">
           <span className="payload-errors-label">Required:</span>
@@ -29,8 +31,8 @@ export function ItemForm({ title, badge, description, payloadkeys, values, onCha
           const isMissing = errors.includes(keyDef.title||keyDef.key)
           return (
             <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
-              <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} />
-              <FieldInput keyDef={keyDef} value={values[keyDef.key]} onChange={v=>handleChange(keyDef.key,v)} showErrors={showErrors} />
+              <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={payloadSupportedOS} />
+              <FieldInput keyDef={keyDef} value={values[keyDef.key]} onChange={v=>handleChange(keyDef.key,v)} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} />
             </div>
           )
         })}

@@ -4,7 +4,7 @@ import { FieldLabel } from './FieldLabel'
 const TYPE_MAP = { '<string>':'text','<integer>':'number','<real>':'number','<boolean>':'checkbox','<date>':'date','<data>':'textarea','<dictionary>':'dict','<array>':'array' }
 export const getInputType = kd => TYPE_MAP[kd.type || '<string>'] || 'text'
 
-export function ArrayField({ keyDef, value = [], onChange }) {
+export function ArrayField({ keyDef, value = [], onChange, showErrors, payloadSupportedOS }) {
   if (keyDef.subkeys === null) {
     return <span className="dict-empty"><em>Nested items not configurable (recursive schema)</em></span>
   }
@@ -19,11 +19,11 @@ export function ArrayField({ keyDef, value = [], onChange }) {
       {value.map((item,i) => (
         <div key={i} className="array-item">
           {itemIsDic
-            ? <div className="array-dict-item"><DictField keyDef={itemSchema} value={item} onChange={v=>update(i,v)} /></div>
+            ? <div className="array-dict-item"><DictField keyDef={itemSchema} value={item} onChange={v=>update(i,v)} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} /></div>
             : itemIsArr
             ? <div className="array-dict-item">
                 {itemSchema.subkeys?.length
-                  ? <ArrayField keyDef={itemSchema} value={Array.isArray(item) ? item : []} onChange={v=>update(i,v)} />
+                  ? <ArrayField keyDef={itemSchema} value={Array.isArray(item) ? item : []} onChange={v=>update(i,v)} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} />
                   : <span className="dict-empty"><em>Nested items not configurable (recursive schema)</em></span>
                 }
               </div>
@@ -37,7 +37,7 @@ export function ArrayField({ keyDef, value = [], onChange }) {
   )
 }
 
-export function DictField({ keyDef, value = {}, onChange, showErrors }) {
+export function DictField({ keyDef, value = {}, onChange, showErrors, payloadSupportedOS }) {
   const subkeys = keyDef.subkeys || []
   if (!subkeys.length) return <div className="dict-empty"><em>No sub-keys defined</em></div>
   return (
@@ -46,8 +46,8 @@ export function DictField({ keyDef, value = {}, onChange, showErrors }) {
         const isMissing = showErrors && sk.presence === 'required' && isEmpty(value[sk.key])
         return (
           <div key={sk.key} className={`sub-field ${isMissing ? 'field-missing' : ''}`}>
-            <FieldLabel title={sk.title} keyName={sk.key} description={sk.content} required={sk.presence==='required'} />
-            <FieldInput keyDef={sk} value={value[sk.key]} onChange={v=>onChange({...value,[sk.key]:v})} showErrors={showErrors} />
+            <FieldLabel title={sk.title} keyName={sk.key} description={sk.content} required={sk.presence==='required'} supportedOS={sk.supportedOS} payloadSupportedOS={payloadSupportedOS} />
+            <FieldInput keyDef={sk} value={value[sk.key]} onChange={v=>onChange({...value,[sk.key]:v})} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} />
           </div>
         )
       })}
@@ -55,7 +55,7 @@ export function DictField({ keyDef, value = {}, onChange, showErrors }) {
   )
 }
 
-export function FieldInput({ keyDef, value, onChange, showErrors }) {
+export function FieldInput({ keyDef, value, onChange, showErrors, payloadSupportedOS }) {
   const inputType = getInputType(keyDef)
   const type = keyDef.type || '<string>'
   if (keyDef.rangelist) return (
@@ -70,13 +70,13 @@ export function FieldInput({ keyDef, value, onChange, showErrors }) {
       <span className="toggle-slider" />
     </label>
   )
-  if (inputType==='array') return <ArrayField keyDef={keyDef} value={value} onChange={onChange} />
+  if (inputType==='array') return <ArrayField keyDef={keyDef} value={value} onChange={onChange} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} />
   if (inputType==='dict') {
     if (keyDef.presence !== 'required' && value == null)
       return <button className="add-btn" onClick={()=>onChange({})}>+ Add {keyDef.title||keyDef.key}</button>
     return (
       <div className="dict-with-remove">
-        <DictField keyDef={keyDef} value={value??{}} onChange={onChange} showErrors={showErrors} />
+        <DictField keyDef={keyDef} value={value??{}} onChange={onChange} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} />
         {keyDef.presence !== 'required' && <button className="rm-dict-btn" onClick={()=>onChange(undefined)}>Remove</button>}
       </div>
     )

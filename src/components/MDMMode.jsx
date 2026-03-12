@@ -126,6 +126,7 @@ export function MDMMode() {
                   onChange={v=>updatePayload(p.id,v)} onRemove={()=>removePayload(p.id)}
                   errors={showErrors?(payloadErrors[p.id]||[]):[]}
                   showErrors={showErrors}
+                  payloadSupportedOS={schema?.payload?.supportedOS}
                 />
               )
             })}

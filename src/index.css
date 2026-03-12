@@ -112,6 +112,11 @@ body {
 .field label, .field-label { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .field-name { font-weight: 500; color: var(--text); }
 .key-code { font-family: var(--font-mono); font-size: 10px; color: var(--text3); background: var(--surface3); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border2); }
+.os-badges { display: inline-flex; flex-wrap: wrap; gap: 3px; }
+.os-badge { font-size: 10px; color: var(--text2); background: var(--surface3); border: 1px solid var(--border); border-radius: 3px; padding: 0 5px; white-space: nowrap; }
+.key-deprecated { font-size: 10px; color: var(--orange); border: 1px solid var(--orange); border-radius: 3px; padding: 0 5px; white-space: nowrap; cursor: default; }
+.key-removed { font-size: 10px; color: var(--red); border: 1px solid var(--red); border-radius: 3px; padding: 0 5px; white-space: nowrap; cursor: default; }
+.key-not-supported { font-size: 10px; color: var(--text2); border: 1px solid var(--border); border-radius: 3px; padding: 0 5px; white-space: nowrap; opacity: 0.7; cursor: default; }
 .required { color: var(--red); margin-left: 1px; }
 .required-field > .field-label .field-name { color: var(--text); }
 
@@ -279,6 +284,25 @@ textarea { resize: vertical; }
 }
 .payload-title { font-size: 13px; font-weight: 500; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .payload-desc { font-size: 12px; color: var(--text2); padding: 10px 14px; border-bottom: 1px solid var(--border2); line-height: 1.5; }
+
+/* OS support section */
+.os-support-section { padding: 6px 14px; border-bottom: 1px solid var(--border2); }
+.os-support-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.os-support-label { font-size: 11px; color: var(--text2); white-space: nowrap; }
+.os-support-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.os-chip { font-size: 11px; padding: 1px 7px; border-radius: 10px; border: 1px solid var(--border); color: var(--text2); background: var(--surface3); white-space: nowrap; }
+.os-chip-deprecated { border-color: var(--orange); color: var(--orange); }
+.os-chip-removed { border-color: var(--red); color: var(--red); }
+.os-chip-dep { font-size: 10px; opacity: 0.8; }
+.os-details-btn { font-size: 10px; color: var(--text2); background: none; border: none; cursor: pointer; padding: 0 4px; margin-left: auto; opacity: 0.6; }
+.os-details-btn:hover { opacity: 1; }
+.os-details { margin-top: 6px; overflow-x: auto; }
+.os-table { border-collapse: collapse; font-size: 11px; width: 100%; }
+.os-table th, .os-table td { padding: 3px 10px; border: 1px solid var(--border2); color: var(--text2); text-align: center; white-space: nowrap; }
+.os-table th { color: var(--text); background: var(--surface3); font-weight: 600; }
+.os-table td:first-child { text-align: left; color: var(--text); background: var(--surface3); font-weight: 500; }
+.os-cell-warn { color: var(--orange) !important; }
+.os-cell-bad { color: var(--red) !important; }
 .rm-payload-btn {
   font-size: 12px;
   color: var(--text3);

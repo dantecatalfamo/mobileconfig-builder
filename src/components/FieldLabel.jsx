@@ -1,11 +1,57 @@
 import { useState } from 'react'
 
-export function FieldLabel({ title, keyName, description, required }) {
+const OS_SHORT = { iOS: 'iOS', macOS: 'macOS', tvOS: 'tvOS', visionOS: 'visionOS', watchOS: 'watchOS' }
+
+function OsBadges({ supportedOS }) {
+  if (!supportedOS) return null
+  const badges = Object.entries(supportedOS)
+    .filter(([, info]) => info?.introduced && info.introduced !== 'n/a')
+    .map(([os, info]) => ({ os, version: info.introduced }))
+  if (!badges.length) return null
+  return (
+    <span className="os-badges">
+      {badges.map(({ os, version }) => (
+        <span key={os} className="os-badge">{OS_SHORT[os] ?? os} {version}+</span>
+      ))}
+    </span>
+  )
+}
+
+function DeprecationBadge({ supportedOS }) {
+  const entries = Object.entries(supportedOS || {})
+  const removed  = entries.filter(([, i]) => i?.removed).map(([os, i]) => `${OS_SHORT[os] ?? os} ${i.removed}`)
+  const deprecated = entries.filter(([, i]) => i?.deprecated && !i?.removed).map(([os, i]) => `${OS_SHORT[os] ?? os} ${i.deprecated}`)
+  if (removed.length) {
+    const tip = [`Removed: ${removed.join(', ')}`, deprecated.length ? `Deprecated: ${deprecated.join(', ')}` : ''].filter(Boolean).join(' · ')
+    return <span className="key-removed" title={tip}>removed</span>
+  }
+  if (deprecated.length) {
+    return <span className="key-deprecated" title={`Deprecated in: ${deprecated.join(', ')}`}>deprecated</span>
+  }
+  return null
+}
+
+function NotSupportedNote({ supportedOS, payloadSupportedOS }) {
+  if (!supportedOS || !payloadSupportedOS) return null
+  const notOn = Object.entries(payloadSupportedOS)
+    .filter(([os, payInfo]) =>
+      payInfo?.introduced && payInfo.introduced !== 'n/a' &&
+      supportedOS[os]?.introduced === 'n/a'
+    )
+    .map(([os]) => OS_SHORT[os] ?? os)
+  if (!notOn.length) return null
+  return <span className="key-not-supported" title={`Not supported on: ${notOn.join(', ')}`}>not on {notOn.join(', ')}</span>
+}
+
+export function FieldLabel({ title, keyName, description, required, supportedOS, payloadSupportedOS }) {
   const [show, setShow] = useState(false)
   return (
     <div className="field-label">
       <span className="field-name">{title || keyName}{required && <span className="required">*</span>}</span>
       <span className="key-code">{keyName}</span>
+      <OsBadges supportedOS={supportedOS} />
+      <DeprecationBadge supportedOS={supportedOS} />
+      <NotSupportedNote supportedOS={supportedOS} payloadSupportedOS={payloadSupportedOS} />
       {description && <>
         <button className="help-btn" onClick={() => setShow(s=>!s)}>?</button>
         {show && <div className="field-desc">{description}</div>}

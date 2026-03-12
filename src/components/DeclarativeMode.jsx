@@ -6,6 +6,7 @@ import { FieldLabel, LabelWithHelp } from './FieldLabel'
 import { FieldInput } from './FormFields'
 import { ItemPicker } from './ItemPicker'
 import { PreviewPanel } from './PreviewPanel'
+import { OsSupportTable } from './OsSupportTable'
 
 export function DeclarativeMode() {
   const [declarations, setDeclarations] = useState([])
@@ -98,6 +99,7 @@ export function DeclarativeMode() {
                   </div>
 
                   {schema?.description && <p className="payload-desc">{schema.description}</p>}
+                  <OsSupportTable payloadSupportedOS={schema?.payload?.supportedOS} payloadkeys={schema?.payloadkeys} />
 
                   {showErrors && declErrors[d.id]?.length>0 && (
                     <div className="payload-errors">
@@ -124,8 +126,8 @@ export function DeclarativeMode() {
                       const isMissing = showErrors && declErrors[d.id]?.includes(keyDef.title||keyDef.key)
                       return (
                         <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
-                          <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} />
-                          <FieldInput keyDef={keyDef} value={d.values[keyDef.key]} onChange={v=>updateDeclaration(d.id,{values:{...d.values,[keyDef.key]:v}})} showErrors={showErrors} />
+                          <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={schema?.payload?.supportedOS} />
+                          <FieldInput keyDef={keyDef} value={d.values[keyDef.key]} onChange={v=>updateDeclaration(d.id,{values:{...d.values,[keyDef.key]:v}})} showErrors={showErrors} payloadSupportedOS={schema?.payload?.supportedOS} />
                         </div>
                       )
                     })}

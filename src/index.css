@@ -66,6 +66,7 @@ body {
 }
 .preview-toggle:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 .preview-toggle.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.preview-toggle.active:hover { background: var(--accent); color: #fff; }
 .preview-toggle:disabled { opacity: 0.4; cursor: default; }
 
 /* ── Main layout ── */
@@ -136,6 +137,7 @@ body {
   padding: 6px 8px;
   margin-top: 2px;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 input[type=text], input[type=number], input[type=date], select, textarea {

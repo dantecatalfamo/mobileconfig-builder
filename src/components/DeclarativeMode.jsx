@@ -13,6 +13,8 @@ export function DeclarativeMode() {
   const [showPreview, setShowPreview] = useState(false)
   const [showErrors, setShowErrors] = useState(false)
   const [touched, setTouched] = useState(false)
+  const [collapsedIds, setCollapsedIds] = useState(new Set())
+  const toggleCollapsed = id => setCollapsedIds(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n })
 
   const addDeclaration = id => {
     setTouched(true)
@@ -85,53 +87,58 @@ export function DeclarativeMode() {
             {declarations.map(d => {
               const schema = schemasData.declarations[d.declarationId]
               const declType = schema?.payload?.declarationtype || d.declarationId
+              const collapsed = collapsedIds.has(d.id)
+              const errs = declErrors[d.id] || []
               return (
-                <div key={d.id} className={`payload-form ${showErrors&&declErrors[d.id]?.length?'has-errors':''}`}>
-                  <div className="payload-form-header">
+                <div key={d.id} className={`payload-form ${showErrors&&errs.length?'has-errors':''}`}>
+                  <div className="payload-form-header" onClick={()=>toggleCollapsed(d.id)} style={{cursor:'pointer'}}>
                     <div>
+                      <span className="payload-collapse-arrow">{collapsed ? '▶' : '▼'}</span>
                       <span className={`payload-type-badge badge-decl-${schema?._category||'other'}`}>{declType}</span>
                       {schema?.title && <span className="payload-title">{schema.title}</span>}
                     </div>
                     <div className="payload-form-header-right">
-                      {showErrors && declErrors[d.id]?.length>0 && <span className="payload-error-count">{declErrors[d.id].length} required field{declErrors[d.id].length!==1?'s':''} missing</span>}
-                      <button className="rm-payload-btn" onClick={()=>removeDeclaration(d.id)}>Remove</button>
+                      {showErrors && errs.length>0 && <span className="payload-error-count">{errs.length} required field{errs.length!==1?'s':''} missing</span>}
+                      <button className="rm-payload-btn" onClick={e=>{e.stopPropagation();removeDeclaration(d.id)}}>Remove</button>
                     </div>
                   </div>
 
-                  {schema?.description && <p className="payload-desc">{schema.description}</p>}
-                  <OsSupportTable payloadSupportedOS={schema?.payload?.supportedOS} payloadkeys={schema?.payloadkeys} />
+                  {!collapsed && <>
+                    {schema?.description && <p className="payload-desc">{schema.description}</p>}
+                    <OsSupportTable payloadSupportedOS={schema?.payload?.supportedOS} payloadkeys={schema?.payloadkeys} />
 
-                  {showErrors && declErrors[d.id]?.length>0 && (
-                    <div className="payload-errors">
-                      <span className="payload-errors-label">Required:</span>
-                      {declErrors[d.id].map(e=><span key={e} className="payload-error-tag">{e}</span>)}
-                    </div>
-                  )}
+                    {showErrors && errs.length>0 && (
+                      <div className="payload-errors">
+                        <span className="payload-errors-label">Required:</span>
+                        {errs.map(e=><span key={e} className="payload-error-tag">{e}</span>)}
+                      </div>
+                    )}
 
-                  {/* Declaration identity fields */}
-                  <div className="fields decl-identity-fields">
-                    <div className="field">
-                      <LabelWithHelp label="Identifier" required help={<>A string that uniquely identifies this declaration within your declaration set. Must be stable across updates — the OS uses it to match the declaration to its previously installed version. A UUID is a safe default (pre-filled), but a human-readable reverse-DNS string like <code>com.acme.wifi.corp</code> works too and is easier to reference from activations.</>} />
-                      <input type="text" value={d.identifier} onChange={e=>updateDeclaration(d.id,{identifier:e.target.value})} placeholder="Unique identifier (UUID recommended)" />
+                    {/* Declaration identity fields */}
+                    <div className="fields decl-identity-fields">
+                      <div className="field">
+                        <LabelWithHelp label="Identifier" required help={<>A string that uniquely identifies this declaration within your declaration set. Must be stable across updates — the OS uses it to match the declaration to its previously installed version. A UUID is a safe default (pre-filled), but a human-readable reverse-DNS string like <code>com.acme.wifi.corp</code> works too and is easier to reference from activations.</>} />
+                        <input type="text" value={d.identifier} onChange={e=>updateDeclaration(d.id,{identifier:e.target.value})} placeholder="Unique identifier (UUID recommended)" />
+                      </div>
+                      <div className="field">
+                        <LabelWithHelp label="Server Token" required help={<>An opaque string the server uses to indicate a specific revision of this declaration. The device compares this to its cached copy — if the tokens differ, it re-applies the declaration. Change this value every time you update the declaration's payload. A new UUID (pre-filled) or an incrementing value like <code>v2</code> both work.</>} />
+                        <input type="text" value={d.serverToken} onChange={e=>updateDeclaration(d.id,{serverToken:e.target.value})} placeholder="Revision token" />
+                      </div>
                     </div>
-                    <div className="field">
-                      <LabelWithHelp label="Server Token" required help={<>An opaque string the server uses to indicate a specific revision of this declaration. The device compares this to its cached copy — if the tokens differ, it re-applies the declaration. Change this value every time you update the declaration's payload. A new UUID (pre-filled) or an incrementing value like <code>v2</code> both work.</>} />
-                      <input type="text" value={d.serverToken} onChange={e=>updateDeclaration(d.id,{serverToken:e.target.value})} placeholder="Revision token" />
-                    </div>
-                  </div>
 
-                  {/* Payload-specific keys */}
-                  <div className="fields">
-                    {(schema?.payloadkeys||[]).map(keyDef => {
-                      const isMissing = showErrors && declErrors[d.id]?.includes(keyDef.title||keyDef.key)
-                      return (
-                        <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
-                          <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={schema?.payload?.supportedOS} />
-                          <FieldInput keyDef={keyDef} value={d.values[keyDef.key]} onChange={v=>updateDeclaration(d.id,{values:{...d.values,[keyDef.key]:v}})} showErrors={showErrors} payloadSupportedOS={schema?.payload?.supportedOS} />
-                        </div>
-                      )
-                    })}
-                  </div>
+                    {/* Payload-specific keys */}
+                    <div className="fields">
+                      {(schema?.payloadkeys||[]).map(keyDef => {
+                        const isMissing = showErrors && errs.includes(keyDef.title||keyDef.key)
+                        return (
+                          <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
+                            <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={schema?.payload?.supportedOS} />
+                            <FieldInput keyDef={keyDef} value={d.values[keyDef.key]} onChange={v=>updateDeclaration(d.id,{values:{...d.values,[keyDef.key]:v}})} showErrors={showErrors} payloadSupportedOS={schema?.payload?.supportedOS} />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </>}
                 </div>
               )
             })}

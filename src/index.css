@@ -273,6 +273,7 @@ textarea { resize: vertical; }
   gap: 10px;
 }
 .payload-form-header > div { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.payload-collapse-arrow { font-size: 9px; color: var(--text2); margin-right: 6px; opacity: 0.6; }
 .payload-type-badge {
   font-family: var(--font-mono);
   font-size: 11px;

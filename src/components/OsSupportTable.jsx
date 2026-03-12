@@ -41,6 +41,7 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
   const keyInfo = collectKeyInfo(payloadkeys)
 
   const hasDeprecated     = supportedOSes.some(os => payloadSupportedOS[os]?.deprecated)
+  const hasRemoved        = supportedOSes.some(os => payloadSupportedOS[os]?.removed)
   const hasSupervised     = supportedOSes.some(os => payloadSupportedOS[os]?.supervised)
   const hasRequiresDep    = supportedOSes.some(os => payloadSupportedOS[os]?.requiresdep)
   const hasUserEnrollment = supportedOSes.some(os => payloadSupportedOS[os]?.userenrollment)
@@ -93,10 +94,18 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
                 <tr>
                   <td>Deprecated</td>
                   {supportedOSes.map(os => {
-                    const info = payloadSupportedOS[os]
-                    if (info.removed) return <td key={os} className="os-cell-bad">{info.removed} (removed)</td>
-                    if (info.deprecated) return <td key={os} className="os-cell-warn">{info.deprecated}</td>
-                    return <td key={os}>—</td>
+                    const v = payloadSupportedOS[os]?.deprecated
+                    return <td key={os} className={v ? 'os-cell-warn' : ''}>{v || '—'}</td>
+                  })}
+                </tr>
+              )}
+
+              {hasRemoved && (
+                <tr>
+                  <td>Removed</td>
+                  {supportedOSes.map(os => {
+                    const v = payloadSupportedOS[os]?.removed
+                    return <td key={os} className={v ? 'os-cell-bad' : ''}>{v || '—'}</td>
                   })}
                 </tr>
               )}

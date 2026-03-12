@@ -114,6 +114,7 @@ body {
 .key-code { font-family: var(--font-mono); font-size: 10px; color: var(--text3); background: var(--surface3); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border2); }
 .os-badges { display: inline-flex; flex-wrap: wrap; gap: 3px; }
 .os-badge { font-size: 10px; color: var(--text2); background: var(--surface3); border: 1px solid var(--border); border-radius: 3px; padding: 0 5px; white-space: nowrap; }
+.key-supervised { font-size: 10px; color: #a371f7; border: 1px solid #a371f7; border-radius: 3px; padding: 0 5px; white-space: nowrap; cursor: default; }
 .key-deprecated { font-size: 10px; color: var(--orange); border: 1px solid var(--orange); border-radius: 3px; padding: 0 5px; white-space: nowrap; cursor: default; }
 .key-removed { font-size: 10px; color: var(--red); border: 1px solid var(--red); border-radius: 3px; padding: 0 5px; white-space: nowrap; cursor: default; }
 .key-not-supported { font-size: 10px; color: var(--text2); border: 1px solid var(--border); border-radius: 3px; padding: 0 5px; white-space: nowrap; opacity: 0.7; cursor: default; }

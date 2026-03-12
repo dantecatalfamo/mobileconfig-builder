@@ -35,6 +35,12 @@ function SupervisedBadge({ supportedOS }) {
   return <span className="key-supervised">supervised {oses.join(', ')}</span>
 }
 
+function DefaultBadge({ defaultVal }) {
+  if (defaultVal === undefined || defaultVal === null) return null
+  const label = String(defaultVal)
+  return <span className="key-default" title={`Default: ${label}`}>default: {label.length > 24 ? label.slice(0, 24) + '…' : label}</span>
+}
+
 function NotSupportedNote({ supportedOS, payloadSupportedOS }) {
   if (!supportedOS || !payloadSupportedOS) return null
   const notOn = Object.entries(payloadSupportedOS)
@@ -47,13 +53,14 @@ function NotSupportedNote({ supportedOS, payloadSupportedOS }) {
   return <span className="key-not-supported" title={`Not supported on: ${notOn.join(', ')}`}>not on {notOn.join(', ')}</span>
 }
 
-export function FieldLabel({ title, keyName, description, required, supportedOS, payloadSupportedOS }) {
+export function FieldLabel({ title, keyName, description, required, supportedOS, payloadSupportedOS, defaultVal }) {
   const [show, setShow] = useState(false)
   return (
     <div className="field-label">
       <span className="field-name">{title || keyName}{required && <span className="required">*</span>}</span>
       <span className="key-code">{keyName}</span>
       <OsBadges supportedOS={supportedOS} />
+      <DefaultBadge defaultVal={defaultVal} />
       <SupervisedBadge supportedOS={supportedOS} />
       <DeprecationBadge supportedOS={supportedOS} />
       <NotSupportedNote supportedOS={supportedOS} payloadSupportedOS={payloadSupportedOS} />

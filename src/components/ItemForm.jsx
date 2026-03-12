@@ -34,7 +34,7 @@ export function ItemForm({ title, badge, description, payloadkeys, values, onCha
             const isMissing = errors.includes(keyDef.title||keyDef.key)
             return (
               <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
-                <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={payloadSupportedOS} />
+                <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={payloadSupportedOS} defaultVal={keyDef.default} />
                 <FieldInput keyDef={keyDef} value={values[keyDef.key]} onChange={v=>handleChange(keyDef.key,v)} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} />
               </div>
             )

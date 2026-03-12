@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import schemasData from '../schemas.json'
 import { generateDeclarationJSON } from '../lib/serialize'
 import { validateDeclarative } from '../lib/validation'
+import { buildDefaultValues } from '../lib/schema'
 import { FieldLabel, LabelWithHelp } from './FieldLabel'
 import { FieldInput } from './FormFields'
 import { ItemPicker } from './ItemPicker'
@@ -23,7 +24,7 @@ export function DeclarativeMode() {
       declarationId: id,
       identifier: crypto.randomUUID(),
       serverToken: crypto.randomUUID(),
-      values: {},
+      values: buildDefaultValues(schemasData.declarations[id]?.payloadkeys),
     }])
   }
   const updateDeclaration = (id, patch) => { setTouched(true); setDeclarations(ds=>ds.map(d=>d.id===id?{...d,...patch}:d)) }
@@ -132,7 +133,7 @@ export function DeclarativeMode() {
                         const isMissing = showErrors && errs.includes(keyDef.title||keyDef.key)
                         return (
                           <div key={keyDef.key} className={`field ${keyDef.presence==='required'?'required-field':''} ${isMissing?'field-missing':''}`}>
-                            <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={schema?.payload?.supportedOS} />
+                            <FieldLabel title={keyDef.title} keyName={keyDef.key} description={keyDef.content} required={keyDef.presence==='required'} supportedOS={keyDef.supportedOS} payloadSupportedOS={schema?.payload?.supportedOS} defaultVal={keyDef.default} />
                             <FieldInput keyDef={keyDef} value={d.values[keyDef.key]} onChange={v=>updateDeclaration(d.id,{values:{...d.values,[keyDef.key]:v}})} showErrors={showErrors} payloadSupportedOS={schema?.payload?.supportedOS} />
                           </div>
                         )

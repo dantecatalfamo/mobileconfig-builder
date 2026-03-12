@@ -46,7 +46,7 @@ export function DictField({ keyDef, value = {}, onChange, showErrors, payloadSup
         const isMissing = showErrors && sk.presence === 'required' && isEmpty(value[sk.key])
         return (
           <div key={sk.key} className={`sub-field ${isMissing ? 'field-missing' : ''}`}>
-            <FieldLabel title={sk.title} keyName={sk.key} description={sk.content} required={sk.presence==='required'} supportedOS={sk.supportedOS} payloadSupportedOS={payloadSupportedOS} />
+            <FieldLabel title={sk.title} keyName={sk.key} description={sk.content} required={sk.presence==='required'} supportedOS={sk.supportedOS} payloadSupportedOS={payloadSupportedOS} defaultVal={sk.default} />
             <FieldInput keyDef={sk} value={value[sk.key]} onChange={v=>onChange({...value,[sk.key]:v})} showErrors={showErrors} payloadSupportedOS={payloadSupportedOS} />
           </div>
         )
@@ -86,7 +86,6 @@ export function FieldInput({ keyDef, value, onChange, showErrors, payloadSupport
   )
   return (
     <input type={inputType} value={value??''} onChange={e=>onChange(inputType==='number'?Number(e.target.value):e.target.value)}
-      placeholder={keyDef.default!==undefined?`Default: ${keyDef.default}`:''}
       min={keyDef.range?.min} max={keyDef.range?.max} pattern={keyDef.format} />
   )
 }

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import schemasData from '../schemas.json'
 import { generateMobileconfig } from '../lib/plist'
 import { validateMDM } from '../lib/validation'
+import { buildDefaultValues } from '../lib/schema'
 import { LabelWithHelp } from './FieldLabel'
 import { ItemForm } from './ItemForm'
 import { ItemPicker } from './ItemPicker'
@@ -17,7 +18,7 @@ export function MDMMode() {
   const addPayload = id => {
     const schema = schemasData.profiles[id]
     setTouched(true)
-    setPayloads(ps=>[...ps,{ id:crypto.randomUUID(), profileId:id, payloadType:schema?.payload?.payloadtype||id, values:{} }])
+    setPayloads(ps=>[...ps,{ id:crypto.randomUUID(), profileId:id, payloadType:schema?.payload?.payloadtype||id, values:buildDefaultValues(schema?.payloadkeys) }])
   }
   const updatePayload = (id,values) => { setTouched(true); setPayloads(ps=>ps.map(p=>p.id===id?{...p,values}:p)) }
   const removePayload = id => { setTouched(true); setPayloads(ps=>ps.filter(p=>p.id!==id)) }

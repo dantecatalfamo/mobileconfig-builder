@@ -302,6 +302,10 @@ textarea { resize: vertical; }
 .os-table th, .os-table td { padding: 3px 10px; border: 1px solid var(--border2); color: var(--text2); text-align: center; white-space: nowrap; }
 .os-table th { color: var(--text); background: var(--surface3); font-weight: 600; }
 .os-table td:first-child { text-align: left; color: var(--text); background: var(--surface3); font-weight: 500; }
+.os-row-label { text-align: left; color: var(--text); background: var(--surface3); font-weight: 500; padding: 3px 8px; border: 1px solid var(--border2); white-space: nowrap; }
+.os-row-hint { display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; margin-left: 5px; border-radius: 50%; border: 1px solid var(--text2); font-size: 9px; color: var(--text2); cursor: help; opacity: 0.5; vertical-align: middle; }
+.os-row-hint:hover { opacity: 1; }
+.os-cell-ok { color: var(--green) !important; }
 .os-cell-warn { color: var(--orange) !important; }
 .os-cell-bad { color: var(--red) !important; }
 .rm-payload-btn {

@@ -2,6 +2,35 @@ import { useState } from 'react'
 
 const OS_ORDER = ['iOS', 'macOS', 'tvOS', 'visionOS', 'watchOS']
 
+const ROW_HELP = {
+  'Introduced':         'The OS version when support for this payload was first introduced.',
+  'Deprecated':         'The OS version when this payload was deprecated. Deprecated payloads still work but may be removed in a future OS release.',
+  'Removed':            'The OS version when this payload was removed and no longer has any effect.',
+  'Supervised':         'When true, this payload can only be installed on supervised devices (enrolled via Apple School Manager, Apple Business Manager, or Configurator).',
+  'Requires DEP':       'When true, this payload can only be used on devices provisioned through Apple\'s Device Enrollment Program (DEP/ABM/ASM).',
+  'User-approved MDM':  'When true, this payload can only be used on devices where the user has explicitly approved the MDM enrollment, rather than it being silently enrolled.',
+  'Manual install':     'When true, this profile can be installed manually by the user directly on the device without MDM.',
+  'Device channel':     'When true, this payload can be delivered over the MDM device channel, which applies settings device-wide regardless of the logged-in user.',
+  'User channel':       'When true, this payload can be delivered over the MDM user channel, which applies settings only to the currently active user session (primarily macOS).',
+  'Multiple allowed':   'When true, multiple instances of this payload type can be installed on the same device simultaneously.',
+  'User enrollment':    'How this payload behaves under User Enrollment (BYOD). "allowed" = works with or without; "required" = only works under user enrollment; "forbidden" = cannot be used under user enrollment; "ignored" = present but has no effect.',
+  'Shared iPad':        'How this payload behaves on Shared iPad devices. "allowed" = works with or without; "required" = only works on Shared iPad; "forbidden" = cannot be used on Shared iPad; "ignored" = present but has no effect.',
+  'Allowed enrollments':'The enrollment types that are permitted to use this payload: "supervised" = supervised MDM, "device" = device enrollment, "user" = user enrollment, "local" = local/manual install.',
+  'Allowed scopes':     'The scopes this payload can be applied to: "system" = device-wide, "user" = current user only.',
+  'Supervised keys':    'Number of individual keys in this payload that require supervised mode on this OS. Other keys may still be usable without supervision.',
+  'Deprecated keys':    'Number of individual keys in this payload that have been deprecated on this OS. These keys still function but may be removed in a future release.',
+}
+
+function RowLabel({ label }) {
+  const help = ROW_HELP[label]
+  return (
+    <td className="os-row-label">
+      {label}
+      {help && <span className="os-row-hint" title={help}>?</span>}
+    </td>
+  )
+}
+
 // Recursively collect per-OS info from payloadkeys and their subkeys
 function collectKeyInfo(payloadkeys) {
   const osInfo = {}
@@ -28,6 +57,16 @@ function collectKeyInfo(payloadkeys) {
   return osInfo
 }
 
+function hasAny(oses, payOS, field) {
+  return oses.some(os => payOS[os]?.[field] !== undefined && payOS[os]?.[field] !== null)
+}
+
+function BoolCell({ value }) {
+  if (value === true)  return <td className="os-cell-ok">Yes</td>
+  if (value === false) return <td>No</td>
+  return <td>—</td>
+}
+
 export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
   const [expanded, setExpanded] = useState(false)
   if (!payloadSupportedOS) return null
@@ -39,15 +78,23 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
   if (!supportedOSes.length) return null
 
   const keyInfo = collectKeyInfo(payloadkeys)
+  const p = payloadSupportedOS
 
-  const hasDeprecated     = supportedOSes.some(os => payloadSupportedOS[os]?.deprecated)
-  const hasRemoved        = supportedOSes.some(os => payloadSupportedOS[os]?.removed)
-  const hasSupervised     = supportedOSes.some(os => payloadSupportedOS[os]?.supervised)
-  const hasRequiresDep    = supportedOSes.some(os => payloadSupportedOS[os]?.requiresdep)
-  const hasUserEnrollment = supportedOSes.some(os => payloadSupportedOS[os]?.userenrollment)
-  const hasMultiple       = supportedOSes.some(os => payloadSupportedOS[os]?.multiple !== undefined)
-  const hasSupervisedKeys = Object.values(keyInfo).some(i => i.supervisedCount > 0)
-  const hasDeprecatedKeys = Object.values(keyInfo).some(i => i.deprecatedCount > 0)
+  const hasDeprecated        = hasAny(supportedOSes, p, 'deprecated')
+  const hasRemoved           = hasAny(supportedOSes, p, 'removed')
+  const hasSupervised        = hasAny(supportedOSes, p, 'supervised')
+  const hasRequiresDep       = hasAny(supportedOSes, p, 'requiresdep')
+  const hasUserApprovedMDM   = hasAny(supportedOSes, p, 'userapprovedmdm')
+  const hasAllowManualInstall= hasAny(supportedOSes, p, 'allowmanualinstall')
+  const hasDeviceChannel     = hasAny(supportedOSes, p, 'devicechannel')
+  const hasUserChannel       = hasAny(supportedOSes, p, 'userchannel')
+  const hasMultiple          = hasAny(supportedOSes, p, 'multiple')
+  const hasUserEnrollment    = hasAny(supportedOSes, p, 'userenrollment')
+  const hasSharedIPad        = hasAny(supportedOSes, p, 'sharedipad')
+  const hasAllowedEnrollments= hasAny(supportedOSes, p, 'allowed-enrollments')
+  const hasAllowedScopes     = hasAny(supportedOSes, p, 'allowed-scopes')
+  const hasSupervisedKeys    = Object.values(keyInfo).some(i => i.supervisedCount > 0)
+  const hasDeprecatedKeys    = Object.values(keyInfo).some(i => i.deprecatedCount > 0)
 
   return (
     <div className="os-support-section">
@@ -55,7 +102,7 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
         <span className="os-support-label">Platform:</span>
         <span className="os-support-chips">
           {supportedOSes.map(os => {
-            const info = payloadSupportedOS[os]
+            const info = p[os]
             const cls = info.removed ? 'os-chip-removed' : info.deprecated ? 'os-chip-deprecated' : ''
             return (
               <span key={os} className={`os-chip ${cls}`} title={
@@ -84,17 +131,15 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
             </thead>
             <tbody>
               <tr>
-                <td>Introduced</td>
-                {supportedOSes.map(os => (
-                  <td key={os}>{payloadSupportedOS[os].introduced}+</td>
-                ))}
+                <RowLabel label="Introduced" />
+                {supportedOSes.map(os => <td key={os}>{p[os].introduced}+</td>)}
               </tr>
 
               {hasDeprecated && (
                 <tr>
-                  <td>Deprecated</td>
+                  <RowLabel label="Deprecated" />
                   {supportedOSes.map(os => {
-                    const v = payloadSupportedOS[os]?.deprecated
+                    const v = p[os]?.deprecated
                     return <td key={os} className={v ? 'os-cell-warn' : ''}>{v || '—'}</td>
                   })}
                 </tr>
@@ -102,9 +147,9 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
 
               {hasRemoved && (
                 <tr>
-                  <td>Removed</td>
+                  <RowLabel label="Removed" />
                   {supportedOSes.map(os => {
-                    const v = payloadSupportedOS[os]?.removed
+                    const v = p[os]?.removed
                     return <td key={os} className={v ? 'os-cell-bad' : ''}>{v || '—'}</td>
                   })}
                 </tr>
@@ -112,48 +157,98 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
 
               {hasSupervised && (
                 <tr>
-                  <td>Supervised</td>
-                  {supportedOSes.map(os => {
-                    const sup = payloadSupportedOS[os]?.supervised
-                    return <td key={os} className={sup ? 'os-cell-warn' : ''}>{sup ? 'Required' : '—'}</td>
-                  })}
+                  <RowLabel label="Supervised" />
+                  {supportedOSes.map(os => <BoolCell key={os} value={p[os]?.supervised} />)}
                 </tr>
               )}
 
               {hasRequiresDep && (
                 <tr>
-                  <td>Requires DEP</td>
-                  {supportedOSes.map(os => {
-                    const dep = payloadSupportedOS[os]?.requiresdep
-                    return <td key={os} className={dep ? 'os-cell-warn' : ''}>{dep ? 'Yes' : '—'}</td>
-                  })}
+                  <RowLabel label="Requires DEP" />
+                  {supportedOSes.map(os => <BoolCell key={os} value={p[os]?.requiresdep} />)}
+                </tr>
+              )}
+
+              {hasUserApprovedMDM && (
+                <tr>
+                  <RowLabel label="User-approved MDM" />
+                  {supportedOSes.map(os => <BoolCell key={os} value={p[os]?.userapprovedmdm} />)}
+                </tr>
+              )}
+
+              {hasAllowManualInstall && (
+                <tr>
+                  <RowLabel label="Manual install" />
+                  {supportedOSes.map(os => <BoolCell key={os} value={p[os]?.allowmanualinstall} />)}
+                </tr>
+              )}
+
+              {hasDeviceChannel && (
+                <tr>
+                  <RowLabel label="Device channel" />
+                  {supportedOSes.map(os => <BoolCell key={os} value={p[os]?.devicechannel} />)}
+                </tr>
+              )}
+
+              {hasUserChannel && (
+                <tr>
+                  <RowLabel label="User channel" />
+                  {supportedOSes.map(os => <BoolCell key={os} value={p[os]?.userchannel} />)}
+                </tr>
+              )}
+
+              {hasMultiple && (
+                <tr>
+                  <RowLabel label="Multiple allowed" />
+                  {supportedOSes.map(os => <BoolCell key={os} value={p[os]?.multiple} />)}
                 </tr>
               )}
 
               {hasUserEnrollment && (
                 <tr>
-                  <td>User Enrollment</td>
+                  <RowLabel label="User enrollment" />
                   {supportedOSes.map(os => {
-                    const mode = payloadSupportedOS[os]?.userenrollment?.mode
+                    const mode = p[os]?.userenrollment?.mode
                     const cls = mode === 'forbidden' ? 'os-cell-bad' : mode === 'required' ? 'os-cell-warn' : ''
                     return <td key={os} className={cls}>{mode || '—'}</td>
                   })}
                 </tr>
               )}
 
-              {hasMultiple && (
+              {hasSharedIPad && (
                 <tr>
-                  <td>Multiple allowed</td>
+                  <RowLabel label="Shared iPad" />
                   {supportedOSes.map(os => {
-                    const m = payloadSupportedOS[os]?.multiple
-                    return <td key={os}>{m === true ? 'Yes' : m === false ? 'No' : '—'}</td>
+                    const mode = p[os]?.sharedipad?.mode
+                    const cls = mode === 'forbidden' ? 'os-cell-bad' : mode === 'required' ? 'os-cell-warn' : ''
+                    return <td key={os} className={cls}>{mode || '—'}</td>
+                  })}
+                </tr>
+              )}
+
+              {hasAllowedEnrollments && (
+                <tr>
+                  <RowLabel label="Allowed enrollments" />
+                  {supportedOSes.map(os => {
+                    const v = p[os]?.['allowed-enrollments']
+                    return <td key={os}>{v ? v.join(', ') : '—'}</td>
+                  })}
+                </tr>
+              )}
+
+              {hasAllowedScopes && (
+                <tr>
+                  <RowLabel label="Allowed scopes" />
+                  {supportedOSes.map(os => {
+                    const v = p[os]?.['allowed-scopes']
+                    return <td key={os}>{v ? v.join(', ') : '—'}</td>
                   })}
                 </tr>
               )}
 
               {hasSupervisedKeys && (
                 <tr>
-                  <td>Supervised keys</td>
+                  <RowLabel label="Supervised keys" />
                   {supportedOSes.map(os => {
                     const n = keyInfo[os]?.supervisedCount || 0
                     return <td key={os} className={n ? 'os-cell-warn' : ''}>{n || '—'}</td>
@@ -163,7 +258,7 @@ export function OsSupportTable({ payloadSupportedOS, payloadkeys }) {
 
               {hasDeprecatedKeys && (
                 <tr>
-                  <td>Deprecated keys</td>
+                  <RowLabel label="Deprecated keys" />
                   {supportedOSes.map(os => {
                     const n = keyInfo[os]?.deprecatedCount || 0
                     return <td key={os} className={n ? 'os-cell-warn' : ''}>{n || '—'}</td>

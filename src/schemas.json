@@ -1,11 +1,11 @@
 {
   "_meta": {
-    "generatedAt": "2026-03-25T18:39:07.119Z",
+    "generatedAt": "2026-03-25T20:45:15.632Z",
     "profileCount": 123,
-    "declarationCount": 46,
+    "declarationCount": 51,
     "source": "https://github.com/apple/device-management"
   },
-  "_appleLicense": "Copyright © 2022-2025 Apple Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a\ncopy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be included\nin all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS\nOR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+  "_appleLicense": "Copyright © 2022-2026 Apple Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a\ncopy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be included\nin all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS\nOR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
   "commonPayloadKeys": [
     {
       "key": "PayloadIdentifier",
@@ -7138,6 +7138,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.4",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -7148,6 +7149,7 @@
             },
             "macOS": {
               "introduced": "15.4",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -7329,10 +7331,12 @@
           "title": "Allow Siri",
           "supportedOS": {
             "iOS": {
-              "introduced": "5.0"
+              "introduced": "5.0",
+              "deprecated": "26.4"
             },
             "macOS": {
               "introduced": "14.0",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -7341,7 +7345,8 @@
               "introduced": "n/a"
             },
             "visionOS": {
-              "introduced": "2.0"
+              "introduced": "2.0",
+              "deprecated": "26.4"
             },
             "watchOS": {
               "introduced": "n/a"
@@ -7357,6 +7362,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "7.0",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -7372,6 +7378,7 @@
               "introduced": "n/a"
             },
             "watchOS": {
+              "deprecated": "26.4",
               "supervised": true
             }
           },
@@ -7385,7 +7392,8 @@
           "title": "Allow Siri While Locked",
           "supportedOS": {
             "iOS": {
-              "introduced": "5.1"
+              "introduced": "5.1",
+              "deprecated": "26.4"
             },
             "macOS": {
               "introduced": "n/a"
@@ -7395,6 +7403,9 @@
             },
             "visionOS": {
               "introduced": "n/a"
+            },
+            "watchOS": {
+              "deprecated": "26.4"
             }
           },
           "type": "<boolean>",
@@ -7408,6 +7419,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "8.1.3",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -8221,6 +8233,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "13.0",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -8337,6 +8350,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "8.1.3",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -8344,6 +8358,7 @@
             },
             "macOS": {
               "introduced": "10.11",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -8487,6 +8502,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "10.3",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -8494,6 +8510,7 @@
             },
             "macOS": {
               "introduced": "10.13",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -8558,6 +8575,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.3",
+              "deprecated": "26.4",
               "supervised": true,
               "allowmanualinstall": false,
               "sharedipad": {
@@ -8569,6 +8587,7 @@
             },
             "macOS": {
               "introduced": "15.3",
+              "deprecated": "26.4",
               "allowmanualinstall": false,
               "userenrollment": {
                 "mode": "forbidden"
@@ -8579,6 +8598,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "allowmanualinstall": false,
               "userenrollment": {
@@ -8849,6 +8869,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.2",
+              "deprecated": "26.4",
               "sharedipad": {
                 "mode": "forbidden"
               },
@@ -8858,6 +8879,7 @@
             },
             "macOS": {
               "introduced": "15.2",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "allowed"
               }
@@ -8867,6 +8889,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "allowed"
               }
@@ -8886,6 +8909,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.2",
+              "deprecated": "26.4",
               "sharedipad": {
                 "mode": "forbidden"
               },
@@ -8895,6 +8919,7 @@
             },
             "macOS": {
               "introduced": "15.2",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "allowed"
               }
@@ -8904,6 +8929,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "allowed"
               }
@@ -9212,6 +9238,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.0",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -9222,6 +9249,7 @@
             },
             "macOS": {
               "introduced": "15.0",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -9231,6 +9259,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -9306,6 +9335,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.0",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -9316,6 +9346,7 @@
             },
             "macOS": {
               "introduced": "15.0",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -9325,6 +9356,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -9345,6 +9377,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.0",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -9361,6 +9394,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -9558,6 +9592,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "9.0",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -9782,6 +9817,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.4",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -9792,6 +9828,7 @@
             },
             "macOS": {
               "introduced": "15.4",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -9801,6 +9838,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -9820,6 +9858,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.1",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -9830,6 +9869,7 @@
             },
             "macOS": {
               "introduced": "15.1",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -9839,6 +9879,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -10097,6 +10138,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.4",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -10107,6 +10149,7 @@
             },
             "macOS": {
               "introduced": "15.4",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -10131,6 +10174,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.3",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -10141,6 +10185,7 @@
             },
             "macOS": {
               "introduced": "15.3",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -10420,6 +10465,7 @@
             "tvOS": {
               "introduced": "12.0",
               "deprecated": "17.4",
+              "removed": "26.4",
               "supervised": true
             },
             "visionOS": {
@@ -10504,6 +10550,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.0",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -10593,6 +10640,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "8.1.3",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -10673,7 +10721,7 @@
           "type": "<boolean>",
           "presence": "optional",
           "default": true,
-          "content": "If `false`, disables the prompt to set up new devices that are nearby."
+          "content": "If `false`, disables the prompt to set up new devices that are nearby. Starting with iOS 26.3, this also prevents exporting iOS data to set up new Android devices."
         },
         {
           "key": "allowRadioService",
@@ -10880,6 +10928,34 @@
           "content": "If `false`, the system disables remote screen observation by the Classroom app. Nest this key beneath `allowScreenShot` as a subrestriction. If `allowScreenShot` is `false`, the Classroom app doesn't observe remote screens. Requires a supervised device until iOS 13 and macOS 10.15. Allowed for user enrollments in macOS 12 and later."
         },
         {
+          "key": "allowRosettaUsageAwareness",
+          "supportedOS": {
+            "iOS": {
+              "introduced": "n/a"
+            },
+            "macOS": {
+              "introduced": "26.4",
+              "allowmanualinstall": false,
+              "userenrollment": {
+                "mode": "forbidden"
+              }
+            },
+            "tvOS": {
+              "introduced": "n/a"
+            },
+            "visionOS": {
+              "introduced": "n/a"
+            },
+            "watchOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "content": "If `false`, disables Rosetta usage awareness. When Rosetta usage awareness is active, a pop-up dialog is displayed to the user when an app that is using Rosetta is launched. The pop-up dialog indicates that Rosetta will be removed in a future version of the operating system so that the user can contact the app vendor regarding a replacement for the current app."
+        },
+        {
           "key": "allowSafari",
           "title": "Allow use of Safari",
           "supportedOS": {
@@ -10988,6 +11064,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.4",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -10998,6 +11075,7 @@
             },
             "macOS": {
               "introduced": "15.4",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -11007,6 +11085,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -11140,6 +11219,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "8.1.3",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -11565,6 +11645,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.3",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -11722,6 +11803,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "18.0",
+              "deprecated": "26.4",
               "supervised": true,
               "sharedipad": {
                 "mode": "forbidden"
@@ -11732,6 +11814,7 @@
             },
             "macOS": {
               "introduced": "15.0",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -11741,6 +11824,7 @@
             },
             "visionOS": {
               "introduced": "2.4",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -12200,6 +12284,7 @@
           "supportedOS": {
             "iOS": {
               "introduced": "5.0",
+              "deprecated": "26.4",
               "supervised": true,
               "userenrollment": {
                 "mode": "forbidden"
@@ -12207,6 +12292,7 @@
             },
             "macOS": {
               "introduced": "10.13",
+              "deprecated": "26.4",
               "userenrollment": {
                 "mode": "forbidden"
               }
@@ -12624,16 +12710,22 @@
           "key": "forceOnDeviceOnlyDictation",
           "supportedOS": {
             "iOS": {
-              "introduced": "14.5"
+              "introduced": "14.5",
+              "deprecated": "26.4"
             },
             "macOS": {
-              "introduced": "14.0"
+              "introduced": "14.0",
+              "deprecated": "26.4"
             },
             "tvOS": {
               "introduced": "n/a"
             },
             "visionOS": {
-              "introduced": "2.0"
+              "introduced": "2.0",
+              "deprecated": "26.4"
+            },
+            "watchOS": {
+              "deprecated": "26.4"
             }
           },
           "type": "<boolean>",
@@ -12645,7 +12737,8 @@
           "key": "forceOnDeviceOnlyTranslation",
           "supportedOS": {
             "iOS": {
-              "introduced": "15.0"
+              "introduced": "15.0",
+              "deprecated": "26.4"
             },
             "macOS": {
               "introduced": "n/a"
@@ -12655,6 +12748,9 @@
             },
             "visionOS": {
               "introduced": "n/a"
+            },
+            "watchOS": {
+              "deprecated": "26.4"
             }
           },
           "type": "<boolean>",
@@ -12839,7 +12935,7 @@
             "max": 1000
           },
           "default": 1000,
-          "content": "The maximum level of app content allowed on the device. Preinstalled (first-party) apps ignore this restriction.\n\nPossible values, with the U.S. description of the rating level:\n\n- `1000`: All\n- `600`: 17+\n- `300`: 12+\n- `200`: 9+\n- `100`: 4+\n- `0`: None\n\nAge bands and the number of discrete age values vary by region, but the values are consistent across regions. For example, in a region that defines rating level 14+, its value is guaranteed to be larger than 300 (12+) and smaller than 600 (17+). Also, the value of rating level 15+ is guaranteed to be larger than the assigned value of rating level 14+. For more information about age ratings, see [Age ratings values and definitions](https://developer.apple.com/help/app-store-connect/reference/age-ratings-values-and-definitions).\n\nExamples of values in other regions include:\n\n- `1000`: All\n- `621`: 21+\n- `620`: 20+\n- `619`: 19+\n- `618`: 18+\n- `600`: 17+\n- `416`: 16+\n- `415`: 15+\n- `314`: 14+\n- `313`: 13+\n- `300`: 12+\n- `211`: 11+\n- `210`: 10+\n- `200`: 9+\n- `108`: 8+\n- `107`: 7+\n- `106`: 6+\n- `105`: 5+\n- `100`: 4+\n- `3`: 3+\n- `2`: 2+\n- `1`: 1+\n- `0`: None\n\nThis restriction will require supervision in a future release."
+          "content": "The maximum level of app content allowed on the device. Starting with iOS 26.2, this rating may apply to certain system apps.\n\nAge bands and the number of discrete age values vary by region, but the values are consistent across regions. For example, in a region that defines rating level 14+, its value is guaranteed to be larger than 300 (12+) and smaller than 600 (17+). Also, the value of rating level 15+ is guaranteed to be larger than the assigned value of rating level 14+. For more information about age ratings, see [Age ratings values and definitions](https://developer.apple.com/help/app-store-connect/reference/age-ratings-values-and-definitions).\n\nBelow is the complete list of age rating values used across all App Store regions.\n- `1000`: All\n- `621`: 21+\n- `620`: 20+\n- `619`: 19+\n- `618`: 18+\n- `600`: 17+\n- `416`: 16+\n- `415`: 15+\n- `314`: 14+\n- `313`: 13+\n- `300`: 12+\n- `211`: 11+\n- `210`: 10+\n- `200`: 9+\n- `108`: 8+\n- `107`: 7+\n- `106`: 6+\n- `105`: 5+\n- `100`: 4+\n- `3`: 3+\n- `2`: 2+\n- `1`: 1+\n- `0`: None\n\nThis restriction will require supervision in a future release."
         },
         {
           "key": "ratingAppsExemptedBundleIDs",
@@ -18126,7 +18222,7 @@
           "content": "If `true`, filters content automatically."
         },
         {
-          "key": "allowlistEnabled",
+          "key": "allowListEnabled",
           "supportedOS": {
             "macOS": {
               "introduced": "15.2"
@@ -18147,10 +18243,10 @@
           "type": "<boolean>",
           "presence": "optional",
           "default": false,
-          "content": "Use `allowlistEnabled` instead."
+          "content": "Use `allowListEnabled` instead."
         },
         {
-          "key": "siteAllowlist",
+          "key": "siteAllowList",
           "supportedOS": {
             "macOS": {
               "introduced": "15.2"
@@ -18158,10 +18254,10 @@
           },
           "type": "<array>",
           "presence": "optional",
-          "content": "An array of sites that defines an allow list. If specified, this defines additional allowed sites besides those in the automated allow list and deny list, including disallowed adult sites.\n\nThis key is required if `allowlistEnabled` is `true`.",
+          "content": "An array of sites that defines an allow list. If specified, this defines additional allowed sites besides those in the automated allow list and deny list, including disallowed adult sites.\n\nThis key is required if `allowListEnabled` is `true`.",
           "subkeys": [
             {
-              "key": "siteAllowlistItem",
+              "key": "siteAllowListItem",
               "type": "<dictionary>",
               "content": "A dictionary defining a site for the allow list.",
               "subkeys": [
@@ -18190,7 +18286,7 @@
           },
           "type": "<array>",
           "presence": "optional",
-          "content": "Use `siteAllowlist` instead.",
+          "content": "Use `siteAllowList` instead.",
           "subkeys": [
             {
               "key": "siteWhitelistItem",
@@ -18214,7 +18310,7 @@
           ]
         },
         {
-          "key": "filterAllowlist",
+          "key": "filterAllowList",
           "supportedOS": {
             "macOS": {
               "introduced": "15.2"
@@ -18225,7 +18321,7 @@
           "content": "The array of URLs that defines an allow list. When `restrictWeb` and `useContentFilter` are enabled, only URLs in the allow list are available to the user.",
           "subkeys": [
             {
-              "key": "filterAllowlistItem",
+              "key": "filterAllowListItem",
               "type": "<string>",
               "presence": "required",
               "content": "An allowed site."
@@ -18241,7 +18337,7 @@
           },
           "type": "<array>",
           "presence": "optional",
-          "content": "Use `filterAllowlist` instead.",
+          "content": "Use `filterAllowList` instead.",
           "subkeys": [
             {
               "key": "filterWhitelistItem",
@@ -18252,7 +18348,7 @@
           ]
         },
         {
-          "key": "filterDenylist",
+          "key": "filterDenyList",
           "supportedOS": {
             "macOS": {
               "introduced": "15.2"
@@ -18263,7 +18359,7 @@
           "content": "The array of URLs that defines a deny list. When `restrictWeb` and `useContentFilter` are enabled, no URLs in the deny list are available to the user.",
           "subkeys": [
             {
-              "key": "filterDenylistItem",
+              "key": "filterDenyListItem",
               "type": "<string>",
               "presence": "required",
               "content": "A disallowed site."
@@ -18279,7 +18375,7 @@
           },
           "type": "<array>",
           "presence": "optional",
-          "content": "Use `filterDenylist` instead.",
+          "content": "Use `filterDenyList` instead.",
           "subkeys": [
             {
               "key": "filterBlacklistItem",
@@ -18549,6 +18645,41 @@
       },
       "payloadkeys": [
         {
+          "key": "ManagementAllowsRemoteSyncing",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "26.4",
+              "devicechannel": true,
+              "userchannel": false
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "content": "If `false`, the device prevents the File Provider extension from using synchronization in any app. Also, none of the other options will be evaluated. Synchronization will be totally disabled for any application."
+        },
+        {
+          "key": "ManagementRemoteSyncingAllowList",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "26.4",
+              "devicechannel": true,
+              "userchannel": false
+            }
+          },
+          "type": "<array>",
+          "presence": "optional",
+          "content": "An array of strings representing the composed identifiers of apps. The device allows the corresponding apps to use File Provider extension synchronization. If present, and `ManagementAllowsRemoteSyncing` is set to `true`, the device allows only the apps in this list to use synchronization. This key is ignored if `ManagementAllowsRemoteSyncing` is set to `false`. If present, the other options will only be evaluated for the apps in this list. The format of the app identifiers is \"Bundle-ID (Team-ID)\", for example `com.example.app (ABCD1234)`.",
+          "subkeys": [
+            {
+              "key": "AllowListItem",
+              "type": "<string>",
+              "presence": "required",
+              "content": "A composed app identifier. The format is \"Bundle.Identifier (TeamIdentifier)\"."
+            }
+          ]
+        },
+        {
           "key": "AllowManagedFileProvidersToRequestAttribution",
           "type": "<boolean>",
           "presence": "optional",
@@ -18581,6 +18712,62 @@
           "type": "<array>",
           "presence": "optional",
           "content": "An array of strings representing the composed identifiers of apps. The device allows the corresponding apps to use File Provider extension desktop and documents synchronization. If present, and `ManagementAllowsKnownFolderSyncing` is set to `true`, the device allows only the apps in this list to use desktop and documents synchronization. This key is ignored if `ManagementAllowsKnownFolderSyncing` is set to `false`. This setting does not impact the ability for apps to use File Provider extension volume access. The format of the app identifiers is \"Bundle-ID (Team-ID)\", for example `com.example.app (ABCD1234)`.",
+          "subkeys": [
+            {
+              "key": "AllowListItem",
+              "type": "<string>",
+              "presence": "required",
+              "content": "A composed app identifier. The format is \"Bundle.Identifier (TeamIdentifier)\"."
+            }
+          ]
+        },
+        {
+          "key": "ManagementAllowsExternalVolumeSyncing",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "26.4",
+              "devicechannel": true,
+              "userchannel": false
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "content": "If `false`, the device only allows File Provider extension volume synchronization for the system \"home\" volume and any data separated volume, and prevents synchronization with any other volumes. If `true``, the device allows File Provider extension volume synchronization for the system \"home\" volume, any data separated volume, and any encrypted APFS volumes (on either internal or external media)."
+        },
+        {
+          "key": "ManagementExternalVolumeSyncingAllowList",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "26.4",
+              "devicechannel": true,
+              "userchannel": false
+            }
+          },
+          "type": "<array>",
+          "presence": "optional",
+          "content": "An array of strings representing the composed identifiers of apps. The device allows the corresponding apps to use File Provider extension volume synchronization. If present, and `ManagementAllowsExternalVolumeSyncing` is set to `true`, the device allows only the apps in this list to use volume synchronization. This key is ignored if `ManagementAllowsExternalVolumeSyncing` is set to `false`. The format of the app identifiers is \"Bundle-ID (Team-ID)\", for example `com.example.app (ABCD1234)`.",
+          "subkeys": [
+            {
+              "key": "AllowListItem",
+              "type": "<string>",
+              "presence": "required",
+              "content": "A composed app identifier. The format is \"Bundle.Identifier (TeamIdentifier)\"."
+            }
+          ]
+        },
+        {
+          "key": "ManagementDomainAutoEnablementList",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "26.4",
+              "devicechannel": true,
+              "userchannel": false
+            }
+          },
+          "type": "<array>",
+          "presence": "optional",
+          "content": "An array of strings representing the composed identifiers of apps. The device automatically enables the File Provider domains for the corresponding apps. The device doesn't enable existing domains if enrollment happens after they are created. The device doesn't prevent the user from disabling these File Provider domains. Users need to manually enable File Provider domains in the Finder if their corresponding apps aren't listed here. The format of the app identifiers is \"Bundle-ID (Team-ID)\", for example `com.example.app (ABCD1234)`.",
           "subkeys": [
             {
               "key": "AllowListItem",
@@ -35449,6 +35636,486 @@
       ],
       "_category": "configurations"
     },
+    "external-intelligence.settings": {
+      "title": "External Intelligence Settings",
+      "description": "The declaration to configure External Intelligence Integrations settings.",
+      "payload": {
+        "declarationtype": "com.apple.configuration.external-intelligence.settings",
+        "supportedOS": {
+          "iOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ],
+            "sharedipad": {
+              "allowed-scopes": []
+            }
+          },
+          "macOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system",
+              "user"
+            ]
+          },
+          "tvOS": {
+            "introduced": "n/a"
+          },
+          "visionOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ]
+          },
+          "watchOS": {
+            "introduced": "n/a"
+          }
+        },
+        "apply": "combined",
+        "content": "Configures External Intelligence Integrations settings."
+      },
+      "payloadkeys": [
+        {
+          "key": "Enabled",
+          "title": "Allow External Intelligence Integrations",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables external intelligence integrations."
+        },
+        {
+          "key": "AllowSignIn",
+          "title": "Allow External Intelligence Integrations Sign In",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables sign-in for external intelligence integrations."
+        },
+        {
+          "key": "AllowedWorkspaceIDs",
+          "title": "Allowed External Intelligence Workspace IDs",
+          "type": "<array>",
+          "presence": "optional",
+          "combinetype": "set-intersection",
+          "content": "An array of strings, but currently restricted to a single element. If present, Apple Intelligence allows use of only the given external integration workspace ID, and requires a sign-in to make requests. The user is required to sign in to integrations that support signing in. Multiple values combine using an intersect operation.",
+          "subkeys": [
+            {
+              "key": "workspaceID",
+              "title": "Allowed Workspace ID",
+              "type": "<string>"
+            }
+          ]
+        }
+      ],
+      "_category": "configurations"
+    },
+    "intelligence.settings": {
+      "title": "Intelligence Settings",
+      "description": "The declaration to configure Apple Intelligence settings.",
+      "payload": {
+        "declarationtype": "com.apple.configuration.intelligence.settings",
+        "supportedOS": {
+          "iOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ],
+            "sharedipad": {
+              "allowed-scopes": []
+            }
+          },
+          "macOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system",
+              "user"
+            ]
+          },
+          "tvOS": {
+            "introduced": "n/a"
+          },
+          "visionOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ]
+          },
+          "watchOS": {
+            "introduced": "n/a"
+          }
+        },
+        "apply": "combined",
+        "content": "Configures Apple Intelligence settings."
+      },
+      "payloadkeys": [
+        {
+          "key": "AllowAppleIntelligenceReport",
+          "title": "Allow Apple Intelligence Report",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Apple Intelligence Report."
+        },
+        {
+          "key": "AllowGenmoji",
+          "title": "Allow Genmoji",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Genmoji."
+        },
+        {
+          "key": "AllowImagePlayground",
+          "title": "Allow Image Playground",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Image Playground."
+        },
+        {
+          "key": "AllowImageWand",
+          "title": "Allow Image Wand",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Image Wand."
+        },
+        {
+          "key": "AllowPersonalizedHandwritingResults",
+          "title": "Allow Personalized Handwriting Results",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            },
+            "visionOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Personalized Handwriting Results."
+        },
+        {
+          "key": "AllowVisualIntelligenceSummary",
+          "title": "Allow Visual Intelligence Summary",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            },
+            "visionOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Visual Intelligence Summary."
+        },
+        {
+          "key": "AllowWritingTools",
+          "title": "Allow Writing Tools",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Writing Tools."
+        },
+        {
+          "key": "Apps",
+          "title": "Apps",
+          "type": "<dictionary>",
+          "presence": "optional",
+          "content": "If present, configures app-specific Intelligence features.",
+          "subkeys": [
+            {
+              "key": "Mail",
+              "title": "Mail",
+              "type": "<dictionary>",
+              "presence": "optional",
+              "content": "If present, configures Mail Intelligence features.",
+              "subkeys": [
+                {
+                  "key": "AllowSmartReplies",
+                  "title": "Allow Smart Replies",
+                  "type": "<boolean>",
+                  "presence": "optional",
+                  "default": true,
+                  "combinetype": "boolean-and",
+                  "content": "If `false`, disables Mail Smart Replies."
+                },
+                {
+                  "key": "AllowSummary",
+                  "title": "Allow Summary",
+                  "type": "<boolean>",
+                  "presence": "optional",
+                  "default": true,
+                  "combinetype": "boolean-and",
+                  "content": "If `false`, disables Mail Summary."
+                }
+              ]
+            },
+            {
+              "key": "Notes",
+              "title": "Notes",
+              "type": "<dictionary>",
+              "presence": "optional",
+              "content": "If present, configures Notes Intelligence features.",
+              "subkeys": [
+                {
+                  "key": "AllowTranscription",
+                  "title": "Allow Transcription",
+                  "supportedOS": {
+                    "visionOS": {
+                      "introduced": "n/a"
+                    }
+                  },
+                  "type": "<boolean>",
+                  "presence": "optional",
+                  "default": true,
+                  "combinetype": "boolean-and",
+                  "content": "If `false`, disables Notes Transcription."
+                },
+                {
+                  "key": "AllowTranscriptionSummary",
+                  "title": "Allow Transcription Summary",
+                  "supportedOS": {
+                    "visionOS": {
+                      "introduced": "n/a"
+                    }
+                  },
+                  "type": "<boolean>",
+                  "presence": "optional",
+                  "default": true,
+                  "combinetype": "boolean-and",
+                  "content": "If `false`, disables Notes Transcription Summary."
+                }
+              ]
+            },
+            {
+              "key": "Safari",
+              "title": "Safari",
+              "type": "<dictionary>",
+              "presence": "optional",
+              "content": "If present, configures Safari intelligence features.",
+              "subkeys": [
+                {
+                  "key": "AllowSummary",
+                  "title": "Allow Summary",
+                  "type": "<boolean>",
+                  "presence": "optional",
+                  "default": true,
+                  "combinetype": "boolean-and",
+                  "content": "If `false`, disables Safari Summary."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "ForceOnDeviceOnlyDictation",
+          "title": "Force On-Device Only Dictation",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": false,
+          "combinetype": "boolean-or",
+          "content": "If `true`, forces On-Device Only Dictation."
+        },
+        {
+          "key": "ForceOnDeviceOnlyTranslation",
+          "title": "Force On-Device Only Translation",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            },
+            "visionOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": false,
+          "combinetype": "boolean-or",
+          "content": "If `true`, forces On-Device Only Translation."
+        }
+      ],
+      "_category": "configurations"
+    },
+    "keyboard.settings": {
+      "title": "Keyboard Settings",
+      "description": "The declaration to configure keyboard settings.",
+      "payload": {
+        "declarationtype": "com.apple.configuration.keyboard.settings",
+        "supportedOS": {
+          "iOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ],
+            "sharedipad": {
+              "allowed-scopes": [
+                "user"
+              ]
+            }
+          },
+          "macOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system",
+              "user"
+            ]
+          },
+          "tvOS": {
+            "introduced": "n/a"
+          },
+          "visionOS": {
+            "introduced": "n/a"
+          },
+          "watchOS": {
+            "introduced": "n/a"
+          }
+        },
+        "apply": "combined",
+        "content": "Configures keyboard settings."
+      },
+      "payloadkeys": [
+        {
+          "key": "AllowAutoCorrection",
+          "title": "Allow Auto-Correction",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables auto-correction."
+        },
+        {
+          "key": "AllowDefinitionLookup",
+          "title": "Allow Definition Lookup",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables definition lookup."
+        },
+        {
+          "key": "AllowDictation",
+          "title": "Allow Dictation",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables dictation."
+        },
+        {
+          "key": "AllowMathKeyboardSuggestions",
+          "title": "Allow Math Keyboard Suggestions",
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables keyboard suggestions that include math solutions. This key is also supported by the math.settings configuration."
+        },
+        {
+          "key": "AllowPredictiveText",
+          "title": "Allow Predictive Text",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables predictive text."
+        },
+        {
+          "key": "AllowSlideToType",
+          "title": "Allow Slide to Type",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables slide to type."
+        },
+        {
+          "key": "AllowSpellCheck",
+          "title": "Allow Spell Check",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables spell check."
+        },
+        {
+          "key": "AllowTextReplacement",
+          "title": "Allow Text Replacement",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables text replacement."
+        }
+      ],
+      "_category": "configurations"
+    },
     "legacy.interactive": {
       "title": "Legacy Interactive Profile",
       "description": "The declaration to configure an interactive legacy profile.",
@@ -35985,7 +36652,7 @@
               "type": "<boolean>",
               "presence": "required",
               "combinetype": "boolean-and",
-              "content": "Controls whether keyboard suggestions include math solutions."
+              "content": "Controls whether keyboard suggestions include math solutions. This key is also supported by the keyboard.settings configuration."
             },
             {
               "key": "MathNotes",
@@ -35995,6 +36662,100 @@
               "content": "Controls whether Math Notes is allowed in other apps such as Notes."
             }
           ]
+        }
+      ],
+      "_category": "configurations"
+    },
+    "migration-assistant.settings": {
+      "title": "Migration Assistant Settings",
+      "description": "The declaration to configure Migration Assistant settings.",
+      "payload": {
+        "declarationtype": "com.apple.configuration.migration-assistant.settings",
+        "supportedOS": {
+          "iOS": {
+            "introduced": "n/a"
+          },
+          "macOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ]
+          },
+          "tvOS": {
+            "introduced": "n/a"
+          },
+          "visionOS": {
+            "introduced": "n/a"
+          },
+          "watchOS": {
+            "introduced": "n/a"
+          }
+        },
+        "apply": "combined",
+        "content": "Configures the managed migration functions of Migration Assistant."
+      },
+      "payloadkeys": [
+        {
+          "key": "ShouldDoManagedMigration",
+          "type": "<boolean>",
+          "presence": "required",
+          "combinetype": "boolean-or",
+          "content": "If `true`, the device manages Migration Assistant."
+        },
+        {
+          "key": "ExcludedAccounts",
+          "type": "<array>",
+          "presence": "optional",
+          "combinetype": "set-union",
+          "content": "An array of strings that represent the user account short names the system excludes from migration.",
+          "subkeys": [
+            {
+              "key": "_Accounts",
+              "type": "<string>"
+            }
+          ]
+        },
+        {
+          "key": "ExcludedPaths",
+          "type": "<array>",
+          "presence": "optional",
+          "combinetype": "set-union",
+          "content": "An array of strings that represent files and directories relative to the user's home directory that the system excludes from migration. Directory paths need to include a trailing \"/\". For example, to exclude the \"Excluded\" directory in the \"Documents\" folder of a user's home directory, use \"Documents/Excluded/\".",
+          "subkeys": [
+            {
+              "key": "_ExcludedPaths",
+              "type": "<string>"
+            }
+          ]
+        },
+        {
+          "key": "RequiredPaths",
+          "type": "<array>",
+          "presence": "optional",
+          "combinetype": "set-union",
+          "content": "An array of strings that represent files and directories relative to the user's home directory that the system needs to migrate. Directory paths need to include a trailing \"/\". For example, to require the \"Required\" directory in the \"Documents\" folder of a user's home directory, use \"Documents/Required/\".",
+          "subkeys": [
+            {
+              "key": "_RequiredPaths",
+              "type": "<string>"
+            }
+          ]
+        },
+        {
+          "key": "ShouldMigrateSecurityPrivacySettings",
+          "type": "<boolean>",
+          "presence": "required",
+          "combinetype": "boolean-or",
+          "content": "If `true`, the system migrates Security & Privacy settings."
+        }
+      ],
+      "notes": [
+        {
+          "title": "",
+          "content": "This declaration allows the device management service to configure Migration Assistant when it runs during Setup Assistant on a Mac. This makes it easy for users to do Mac-to-Mac migrations of enterprise devices when they setup a new Mac.\n\nConfigure the device to use the `AwaitingConfiguration` state after it enrolls with the server. The server needs to send the configuration and verify the configuration as both active and valid using the Declarative Device Management status, before it sends the `DeviceConfiguredCommand` command to exit that state.\n\nThe device reports Migration Assistant progress using the `StatusMigrationAssistantState` status item, and provides a report when migration completes using the `StatusMigrationAssistantReport` status item."
         }
       ],
       "_category": "configurations"
@@ -37658,6 +38419,130 @@
         {
           "title": "",
           "content": "The device stores the service configurations files from this configuration in a tamper-proof location. Built-in services use these files to override their default configurations.\n\nThe `DataAssetReference` refers to a zip archive that contains configuration files for a specific service. When the device applies the configuration, it downloads the asset data and expands the archive into a service-specific location. If the device updates a configuration, it downloads the new asset data and expands the data to replace what it previously installed. If the device deactivates or removes the configuration, it removes the configuration files from the service-specific directory.\n\nAll files in the expanded archive are set to -r--r--r-- unix file permissions. Any links in the archive will be restricted to referencing files within the service-specific location.\n\nThe following built-in system services use managed configuration files:\n\n| ServiceType  | Manages |\n|---|---|\n| com.apple.sshd | /etc/ssh |\n| com.apple.sudo | /etc/sudoers |\n| com.apple.pam | /etc/pam.d |\n| com.apple.cups | /etc/cups |\n| com.apple.apache.httpd | /etc/apache2 |\n| com.apple.bash | /etc/profile |\n| com.apple.zsh | /etc/zprofile |\n| | /etc/zlogin |\n| | /etc/zlogout |\n| | /etc/zshenv |\n| | /etc/zshrc |\n| com.apple.cryptoTokenKit | /etc/SmartcardLogin.plist |\n| com.apple.authorization | /Library/Security/ |\n\nThe files in the zip archive need to mirror the folder structure and configuration files that the service expects to be present starting at the root of the file system. The service uses only the files the declaration provides and ignores the ones in its default directories.\n\nFor example, a configuration with `ServiceType`: `com.apple.sshd` configures sshd to use the files that the `DataAssetReference` provides, instead of the files located at /etc/ssh. The corresponding zip archive needs to contain:\n\n```\netc/\n└ ssh/\n  ├ moduli\n  ├ ssh_config\n  ├ ssh_config.d/\n  ├ sshd_config\n  └ sshd_config.d/\n    └ 100-macos.conf\n```\n\nYou can create an executable that uses service configuration files by calling the `mcf_service_path_for_service_type` method in the `libmanagedconfigurationfiles.dylib` system library. You pass in an identifier for your service type and the method returns the file system path for the directory that contains the corresponding service configuration files. Use those files to override the standard or default configuration the executable would otherwise use. See libmanagedconfigurationfiles.h in the macOS SDK for more detail.\n\n> Important:\n> The system reserves the `com.apple` prefix for built-in services."
+        }
+      ],
+      "_category": "configurations"
+    },
+    "siri.settings": {
+      "title": "Siri Settings",
+      "description": "The declaration to configure Siri settings.",
+      "payload": {
+        "declarationtype": "com.apple.configuration.siri.settings",
+        "supportedOS": {
+          "iOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ],
+            "sharedipad": {
+              "allowed-scopes": [
+                "user"
+              ]
+            }
+          },
+          "macOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system",
+              "user"
+            ]
+          },
+          "tvOS": {
+            "introduced": "n/a"
+          },
+          "visionOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ]
+          },
+          "watchOS": {
+            "introduced": "26.4",
+            "allowed-enrollments": [
+              "supervised"
+            ],
+            "allowed-scopes": [
+              "system"
+            ]
+          }
+        },
+        "apply": "combined",
+        "content": "Configures Siri settings."
+      },
+      "payloadkeys": [
+        {
+          "key": "Enabled",
+          "title": "Enabled",
+          "supportedOS": {
+            "watchOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Siri."
+        },
+        {
+          "key": "AllowUserGeneratedContent",
+          "title": "Allow User Generated Content",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            },
+            "visionOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Siri user-generated content."
+        },
+        {
+          "key": "AllowWhileLocked",
+          "title": "Allow While Locked",
+          "supportedOS": {
+            "macOS": {
+              "introduced": "n/a"
+            },
+            "visionOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": true,
+          "combinetype": "boolean-and",
+          "content": "If `false`, disables Siri while locked."
+        },
+        {
+          "key": "ForceProfanityFilter",
+          "title": "Force Profanity Filter",
+          "supportedOS": {
+            "visionOS": {
+              "introduced": "n/a"
+            },
+            "watchOS": {
+              "introduced": "n/a"
+            }
+          },
+          "type": "<boolean>",
+          "presence": "optional",
+          "default": false,
+          "combinetype": "boolean-or",
+          "content": "If `true`, forces Siri profanity filter."
         }
       ],
       "_category": "configurations"

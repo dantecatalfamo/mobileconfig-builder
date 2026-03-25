@@ -1,6 +1,11 @@
 function escapeXml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 }
+function isDefault(value, def) {
+  if (typeof def === 'boolean') return value === def || value === String(def)
+  // eslint-disable-next-line eqeqeq
+  return value == def
+}
 function ind(n) { return '\t'.repeat(n) }
 
 function valueToPlistLines(value, type, depth, subkeys = []) {
@@ -45,6 +50,7 @@ function dictToPlistLines(obj, subkeyDefs = [], depth) {
   for (const [key, value] of Object.entries(obj)) {
     if (value === undefined || value === null || value === '') continue
     const sk = schemaByKey[key]
+    if (sk && sk.default !== undefined && sk.presence !== 'required' && isDefault(value, sk.default)) continue
     const type = sk?.type || (typeof value === 'boolean' ? '<boolean>' : typeof value === 'number' ? '<integer>' : '<string>')
     const vlines = valueToPlistLines(value, type, depth + 1, sk?.subkeys || [])
     if (!vlines.length) continue
@@ -73,6 +79,7 @@ export function generateMobileconfig(schemasData, profileMeta, payloadForms) {
       if (['PayloadType','PayloadVersion','PayloadUUID','PayloadIdentifier'].includes(key)) continue
       if (value === undefined || value === null || value === '') continue
       const sk = schemaByKey[key]
+      if (sk && sk.default !== undefined && sk.presence !== 'required' && isDefault(value, sk.default)) continue
       const vlines = valueToPlistLines(value, sk?.type || '<string>', 3, sk?.subkeys || [])
       if (!vlines.length) continue
       lines.push(`\t\t\t<key>${escapeXml(key)}</key>`, ...vlines)

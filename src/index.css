@@ -621,3 +621,37 @@ textarea { resize: vertical; }
   padding: 1px 4px;
   color: var(--text2);
 }
+
+/* ── Footer / License ── */
+.app-footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 24px 20px 32px;
+}
+.license-details summary {
+  font-size: 12px;
+  color: var(--text3);
+  cursor: pointer;
+  list-style: none;
+}
+.license-details summary::before {
+  content: '▸ ';
+}
+.license-details[open] summary::before {
+  content: '▾ ';
+}
+.license-details summary:hover {
+  color: var(--text2);
+}
+.license-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.6;
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  white-space: pre-wrap;
+}

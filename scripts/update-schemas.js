@@ -21,6 +21,7 @@ const ROOT = join(__dirname, '..')
 const DM = join(ROOT, 'device-management')
 const PROFILES_DIR = join(DM, 'mdm', 'profiles')
 const DECLARATIVE_DIR = join(DM, 'declarative', 'declarations')
+const LICENSE_FILE = join(DM, 'LICENSE.txt')
 const OUT_FILE = join(ROOT, 'src', 'schemas.json')
 
 // ── Optional pull ─────────────────────────────────────────────────────────────
@@ -144,6 +145,14 @@ const { results: declarations, skipped: declarationsSkipped } = loadDirRecursive
 
 console.log(`  Declarations: ${Object.keys(declarations).length}  Skipped: ${declarationsSkipped.length}`)
 
+// ── Read license ─────────────────────────────────────────────────────────────
+let appleLicense = ''
+try {
+  appleLicense = readFileSync(LICENSE_FILE, 'utf8').trim()
+} catch {
+  console.warn('WARN: could not read LICENSE.txt from device-management submodule')
+}
+
 // ── Write bundle ──────────────────────────────────────────────────────────────
 const bundle = {
   _meta: {
@@ -152,6 +161,7 @@ const bundle = {
     declarationCount: Object.keys(declarations).length,
     source: 'https://github.com/apple/device-management',
   },
+  _appleLicense: appleLicense,
   commonPayloadKeys: deref(common?.payloadkeys  ?? []),
   topLevel:          deref(topLevel?.payloadkeys ?? []),
   declarationBase:   deref(base?.payloadkeys     ?? []),

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { MDMMode } from './components/MDMMode'
 import { DeclarativeMode } from './components/DeclarativeMode'
+import schemasData from './schemas.json'
 
 export default function App() {
   const [mode, setMode] = useState('mdm')
@@ -25,6 +26,15 @@ export default function App() {
       </header>
 
       {mode === 'mdm' ? <MDMMode /> : <DeclarativeMode />}
+
+      {schemasData._appleLicense && (
+        <footer className="app-footer">
+          <details className="license-details">
+            <summary>Schema data sourced from Apple Inc. — MIT License</summary>
+            <pre className="license-text">{schemasData._appleLicense}</pre>
+          </details>
+        </footer>
+      )}
     </div>
   )
 }

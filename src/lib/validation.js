@@ -1,5 +1,3 @@
-import schemasData from '../schemas.json'
-
 export function isEmpty(v) { return v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length) }
 
 function collectMissing(keys, values) {
@@ -14,7 +12,7 @@ function collectMissing(keys, values) {
   return missing
 }
 
-export function validateMDM(meta, payloads) {
+export function validateMDM(schemasData, meta, payloads) {
   const metaErrors = []
   if (!meta.displayName?.trim()) metaErrors.push('Display Name is required')
   if (!meta.identifier?.trim()) metaErrors.push('Identifier is required')
@@ -26,7 +24,7 @@ export function validateMDM(meta, payloads) {
   return { metaErrors, payloadErrors }
 }
 
-export function validateDeclarative(declarations) {
+export function validateDeclarative(schemasData, declarations) {
   const errors = {}
   for (const d of declarations) {
     const errs = []

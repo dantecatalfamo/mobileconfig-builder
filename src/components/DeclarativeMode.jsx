@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import schemasData from '../schemas.json'
 import { generateDeclarationJSON } from '../lib/serialize'
 import { validateDeclarative } from '../lib/validation'
 import { buildDefaultValues } from '../lib/schema'
@@ -9,7 +8,7 @@ import { ItemPicker } from './ItemPicker'
 import { PreviewPanel } from './PreviewPanel'
 import { OsSupportTable } from './OsSupportTable'
 
-export function DeclarativeMode() {
+export function DeclarativeMode({ schemasData }) {
   const [declarations, setDeclarations] = useState([])
   const [showPreview, setShowPreview] = useState(false)
   const [showErrors, setShowErrors] = useState(false)
@@ -30,14 +29,14 @@ export function DeclarativeMode() {
   const updateDeclaration = (id, patch) => { setTouched(true); setDeclarations(ds=>ds.map(d=>d.id===id?{...d,...patch}:d)) }
   const removeDeclaration = id => { setTouched(true); setDeclarations(ds=>ds.filter(d=>d.id!==id)) }
 
-  const declErrors = useMemo(()=>validateDeclarative(declarations),[declarations])
+  const declErrors = useMemo(()=>validateDeclarative(schemasData,declarations),[schemasData,declarations])
   const isValid = !Object.keys(declErrors).length && declarations.length > 0
   if (isValid && showErrors) setShowErrors(false)
 
   const jsonOutput = useMemo(()=>{
     if (!declarations.length) return null
-    return JSON.stringify(generateDeclarationJSON(declarations), null, 2)
-  },[declarations])
+    return JSON.stringify(generateDeclarationJSON(schemasData, declarations), null, 2)
+  },[schemasData,declarations])
 
   const totalErrors = Object.values(declErrors).reduce((n,e)=>n+e.length,0)
 

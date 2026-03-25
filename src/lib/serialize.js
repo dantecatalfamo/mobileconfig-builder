@@ -1,6 +1,4 @@
-import schemasData from '../schemas.json'
-
-export function generateDeclarationJSON(declarations) {
+export function generateDeclarationJSON(schemasData, declarations) {
   return declarations.map(d => {
     const schema = schemasData.declarations[d.declarationId]
     const declarationType = schema?.payload?.declarationtype || d.declarationId

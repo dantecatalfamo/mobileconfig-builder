@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import schemasData from '../schemas.json'
 import { generateMobileconfig } from '../lib/plist'
 import { validateMDM } from '../lib/validation'
 import { buildDefaultValues } from '../lib/schema'
@@ -8,7 +7,7 @@ import { ItemForm } from './ItemForm'
 import { ItemPicker } from './ItemPicker'
 import { PreviewPanel } from './PreviewPanel'
 
-export function MDMMode() {
+export function MDMMode({ schemasData }) {
   const [meta, setMeta] = useState({ displayName:'', identifier:'com.example.profile', organization:'', description:'', scope:'System', removalDisallowed:false })
   const [payloads, setPayloads] = useState([])
   const [showPreview, setShowPreview] = useState(false)
@@ -23,14 +22,14 @@ export function MDMMode() {
   const updatePayload = (id,values) => { setTouched(true); setPayloads(ps=>ps.map(p=>p.id===id?{...p,values}:p)) }
   const removePayload = id => { setTouched(true); setPayloads(ps=>ps.filter(p=>p.id!==id)) }
 
-  const { metaErrors, payloadErrors } = useMemo(()=>validateMDM(meta,payloads),[meta,payloads])
+  const { metaErrors, payloadErrors } = useMemo(()=>validateMDM(schemasData,meta,payloads),[schemasData,meta,payloads])
   const isValid = !metaErrors.length && !Object.keys(payloadErrors).length
   if (isValid && showErrors) setShowErrors(false)
 
   const plistOutput = useMemo(()=>{
     if (!isValid) return null
-    return generateMobileconfig(meta, payloads.map(p=>({ profileId:p.profileId, payloadType:p.payloadType, values:p.values })))
-  },[isValid,meta,payloads])
+    return generateMobileconfig(schemasData, meta, payloads.map(p=>({ profileId:p.profileId, payloadType:p.payloadType, values:p.values })))
+  },[isValid,schemasData,meta,payloads])
 
   const filename = `${(meta.identifier||'profile').replace(/[^a-zA-Z0-9.-]/g,'_')}.mobileconfig`
   const totalErrors = metaErrors.length + Object.values(payloadErrors).reduce((n,e)=>n+e.length,0)

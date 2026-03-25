@@ -1,5 +1,3 @@
-import schemasData from '../schemas.json'
-
 function escapeXml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 }
@@ -55,7 +53,7 @@ function dictToPlistLines(obj, subkeyDefs = [], depth) {
   lines.push(`${pad}</dict>`); return lines
 }
 
-export function generateMobileconfig(profileMeta, payloadForms) {
+export function generateMobileconfig(schemasData, profileMeta, payloadForms) {
   const profileUUID = crypto.randomUUID().toUpperCase()
   const lines = [
     '<?xml version="1.0" encoding="UTF-8"?>',

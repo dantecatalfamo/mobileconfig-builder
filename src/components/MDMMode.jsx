@@ -49,18 +49,20 @@ export function MDMMode({ schemasData }) {
   return (
     <>
       <div className="mode-toolbar">
-        <div className="mode-toolbar-left">
-          <span className="payload-count">{payloads.length} payload{payloads.length!==1?'s':''}</span>
-        </div>
-        <div className="mode-toolbar-right">
-          <button className={`preview-toggle ${showPreview?'active':''}`} onClick={()=>setShowPreview(s=>!s)} disabled={!plistOutput}>
-            {showPreview?'Hide Preview':'Preview XML'}
-          </button>
-          <button className={`download-header-btn ${!touched?'btn-neutral':isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}
-            title={touched&&!isValid?`${totalErrors} required field${totalErrors!==1?'s':''} missing`:`Download ${filename}`}>
-            ⬇ Download .mobileconfig
-            {touched && !isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
-          </button>
+        <div className="mode-toolbar-inner">
+          <div className="mode-toolbar-left">
+            <span className="payload-count">{payloads.length} payload{payloads.length!==1?'s':''}</span>
+          </div>
+          <div className="mode-toolbar-right">
+            <button className={`preview-toggle ${showPreview?'active':''}`} onClick={()=>setShowPreview(s=>!s)} disabled={!plistOutput}>
+              {showPreview?'Hide Preview':'Preview XML'}
+            </button>
+            <button className={`download-header-btn ${!touched?'btn-neutral':isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}
+              title={touched&&!isValid?`${totalErrors} required field${totalErrors!==1?'s':''} missing`:`Download ${filename}`}>
+              ⬇ Download .mobileconfig
+              {touched && !isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
+            </button>
+          </div>
         </div>
       </div>
 

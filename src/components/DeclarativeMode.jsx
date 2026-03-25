@@ -52,19 +52,21 @@ export function DeclarativeMode({ schemasData }) {
   return (
     <>
       <div className="mode-toolbar">
-        <div className="mode-toolbar-left">
-          <span className="payload-count">{declarations.length} declaration{declarations.length!==1?'s':''}</span>
-          <span className="decl-note">Declarative Device Management · outputs JSON</span>
-        </div>
-        <div className="mode-toolbar-right">
-          <button className={`preview-toggle ${showPreview?'active':''}`} onClick={()=>setShowPreview(s=>!s)} disabled={!jsonOutput}>
-            {showPreview?'Hide Preview':'Preview JSON'}
-          </button>
-          <button className={`download-header-btn ${!touched?'btn-neutral':isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}>
-            ⬇ Download declarations.json
-            {touched && !isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
-            {touched && !isValid && !declarations.length && <span className="error-badge">!</span>}
-          </button>
+        <div className="mode-toolbar-inner">
+          <div className="mode-toolbar-left">
+            <span className="payload-count">{declarations.length} declaration{declarations.length!==1?'s':''}</span>
+            <span className="decl-note">Declarative Device Management · outputs JSON</span>
+          </div>
+          <div className="mode-toolbar-right">
+            <button className={`preview-toggle ${showPreview?'active':''}`} onClick={()=>setShowPreview(s=>!s)} disabled={!jsonOutput}>
+              {showPreview?'Hide Preview':'Preview JSON'}
+            </button>
+            <button className={`download-header-btn ${!touched?'btn-neutral':isValid?'btn-valid':'btn-invalid'}`} onClick={handleDownload}>
+              ⬇ Download declarations.json
+              {touched && !isValid && totalErrors>0 && <span className="error-badge">{totalErrors}</span>}
+              {touched && !isValid && !declarations.length && <span className="error-badge">!</span>}
+            </button>
+          </div>
         </div>
       </div>
 

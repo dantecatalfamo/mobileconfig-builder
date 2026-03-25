@@ -585,10 +585,14 @@ textarea { resize: vertical; }
 .mode-toolbar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+}
+.mode-toolbar-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 8px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 20px;
   gap: 12px;
 }
 .mode-toolbar-left { display: flex; align-items: center; gap: 12px; }

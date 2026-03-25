@@ -1,16 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { MDMMode } from './components/MDMMode'
 import { DeclarativeMode } from './components/DeclarativeMode'
+import schemasData from './schemas.json'
 
 export default function App() {
   const [mode, setMode] = useState('mdm')
-  const [schemasData, setSchemasData] = useState(null)
-
-  useEffect(() => {
-    import('./schemas.json').then(m => setSchemasData(m.default))
-  }, [])
-
-  if (!schemasData) return <div className="app"><p style={{textAlign:'center',marginTop:'4rem',color:'var(--text2)'}}>Loading schemas…</p></div>
 
   return (
     <div className="app">

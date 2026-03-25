@@ -27,14 +27,21 @@ export default function App() {
 
       {mode === 'mdm' ? <MDMMode schemasData={schemasData} /> : <DeclarativeMode schemasData={schemasData} />}
 
-      {schemasData._appleLicense && (
-        <footer className="app-footer">
+      <footer className="app-footer">
+        <div className="footer-info">
+          <span>© 2026 Dante Catalfamo</span>
+          <span className="footer-sep">·</span>
+          <span>AGPL-3.0</span>
+          <span className="footer-sep">·</span>
+          <a href="https://github.com/dantecatalfamo/mobileconfig-builder" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+        {schemasData._appleLicense && (
           <details className="license-details">
             <summary>Schema data sourced from Apple Inc. — MIT License</summary>
             <pre className="license-text">{schemasData._appleLicense}</pre>
           </details>
-        </footer>
-      )}
+        )}
+      </footer>
     </div>
   )
 }

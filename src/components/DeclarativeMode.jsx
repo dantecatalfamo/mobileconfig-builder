@@ -104,7 +104,7 @@ export function DeclarativeMode({ schemasData }) {
               className={`download-header-btn ${!touched ? "btn-neutral" : isValid ? "btn-valid" : "btn-invalid"}`}
               onClick={handleDownload}
             >
-              ⬇ Download declarations.json
+              Download declarations.json
               {touched && !isValid && totalErrors > 0 && (
                 <span className="error-badge">{totalErrors}</span>
               )}

@@ -119,7 +119,7 @@ export function MDMMode({ schemasData }) {
                   : `Download ${filename}`
               }
             >
-              ⬇ Download .mobileconfig
+              Download .mobileconfig
               {touched && !isValid && totalErrors > 0 && (
                 <span className="error-badge">{totalErrors}</span>
               )}

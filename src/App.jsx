@@ -41,17 +41,26 @@ export default function App() {
 
       <footer className="app-footer">
         <div className="footer-info">
-          <span>© 2026 Dante Catalfamo</span>
-          <span className="footer-sep">·</span>
-          <span>AGPL-3.0</span>
-          <span className="footer-sep">·</span>
-          <a
-            href="https://github.com/dantecatalfamo/mobileconfig-builder"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
+          <div className="footer-left">
+            <span>© 2026 Dante Catalfamo</span>
+            <span className="footer-sep">·</span>
+            <span>AGPL-3.0</span>
+            <span className="footer-sep">·</span>
+            <a
+              href="https://github.com/dantecatalfamo/mobileconfig-builder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+          </div>
+          <span>
+            Schema built{" "}
+            {new Date(schemasData._meta.generatedAt).toLocaleDateString(
+              undefined,
+              { year: "numeric", month: "short", day: "numeric" },
+            )}
+          </span>
         </div>
         {schemasData._appleLicense && (
           <details className="license-details">

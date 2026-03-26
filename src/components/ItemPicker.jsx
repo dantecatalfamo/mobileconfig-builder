@@ -54,6 +54,9 @@ export function ItemPicker({ schemas, onAdd, label }) {
       </button>
       {open && (
         <div className="picker-panel">
+          <div className="picker-header">
+            <button className="picker-close" onClick={() => { setOpen(false); setSearch(""); }}>✕ Cancel</button>
+          </div>
           <input
             autoFocus
             type="text"

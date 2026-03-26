@@ -58,7 +58,7 @@ body {
   line-height: 1.5;
 }
 
-/* ── Header ── */
+/*  Header  */
 .app-header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -133,7 +133,7 @@ body {
   cursor: default;
 }
 
-/* ── Main layout ── */
+/*  Main layout  */
 .app-main {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -159,7 +159,7 @@ body {
   max-height: calc(100vh - 90px);
 }
 
-/* ── Cards ── */
+/*  Cards  */
 .meta-form,
 .payloads-section,
 .payload-form,
@@ -169,7 +169,7 @@ body {
   border-radius: var(--radius);
 }
 
-/* ── Profile meta ── */
+/*  Profile meta  */
 .meta-form {
   padding: 20px;
 }
@@ -195,7 +195,7 @@ body {
   flex: 1;
 }
 
-/* ── Fields ── */
+/*  Fields  */
 .field {
   display: flex;
   flex-direction: column;
@@ -222,7 +222,7 @@ body {
   color: var(--text);
 }
 
-/* ── Inline field badges ── */
+/*  Inline field badges  */
 /* Base shared by all small metadata badges */
 .key-badge {
   font-size: 10px;
@@ -353,7 +353,7 @@ textarea {
   resize: vertical;
 }
 
-/* ── Toggle ── */
+/*  Toggle  */
 .toggle {
   display: inline-flex;
   align-items: center;
@@ -391,7 +391,7 @@ textarea {
   background: #fff;
 }
 
-/* ── Array field ── */
+/*  Array field  */
 .array-field {
   display: flex;
   flex-direction: column;
@@ -439,7 +439,7 @@ textarea {
   background: var(--accent-dim);
 }
 
-/* ── Dict field ── */
+/*  Dict field  */
 .dict-field {
   border: 1px solid var(--border2);
   border-radius: var(--radius);
@@ -488,7 +488,7 @@ textarea {
   color: var(--red);
 }
 
-/* ── Payloads section ── */
+/*  Payloads section  */
 .payloads-section {
   padding: 20px;
   display: flex;
@@ -519,7 +519,7 @@ textarea {
   color: var(--text2);
 }
 
-/* ── Payload form ── */
+/*  Payload form  */
 .payload-form {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -572,7 +572,7 @@ textarea {
   line-height: 1.5;
 }
 
-/* ── OS support section ── */
+/*  OS support section  */
 .os-support-section {
   padding: 6px 14px;
   border-bottom: 1px solid var(--border2);
@@ -705,7 +705,7 @@ textarea {
   font-style: italic;
 }
 
-/* ── Payload picker ── */
+/*  Payload picker  */
 .payload-picker {
   position: relative;
 }
@@ -737,6 +737,9 @@ textarea {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+.picker-header {
+  display: none;
 }
 .picker-search {
   border: none;
@@ -794,7 +797,7 @@ textarea {
   text-align: center;
 }
 
-/* ── Preview ── */
+/*  Preview  */
 .preview-panel {
   display: flex;
   flex-direction: column;
@@ -866,7 +869,7 @@ textarea {
   padding: 10px;
 }
 
-/* ── Download button (header) ── */
+/*  Download button (header)  */
 .download-header-btn {
   display: inline-flex;
   align-items: center;
@@ -920,7 +923,7 @@ textarea {
   font-weight: 700;
 }
 
-/* ── Validation error states ── */
+/*  Validation error states  */
 .field-missing input,
 .field-missing select,
 .field-missing textarea {
@@ -971,7 +974,7 @@ textarea {
   color: var(--red);
 }
 
-/* ── Mode switcher ── */
+/*  Mode switcher  */
 .mode-switcher {
   display: flex;
   background: var(--surface3);
@@ -1001,7 +1004,7 @@ textarea {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-/* ── Mode toolbar (below header) ── */
+/*  Mode toolbar (below header)  */
 .mode-toolbar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -1030,7 +1033,7 @@ textarea {
   color: var(--text3);
 }
 
-/* ── Declarative category badge colours ── */
+/*  Declarative category badge colours  */
 .badge-decl-configurations {
   background: rgba(163, 113, 247, 0.15);
   border-color: rgba(163, 113, 247, 0.4);
@@ -1057,14 +1060,14 @@ textarea {
   color: var(--text2);
 }
 
-/* ── Declarative identity fields ── */
+/*  Declarative identity fields  */
 .decl-identity-fields {
   border-bottom: 1px solid var(--border2);
   padding-bottom: 12px;
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* ── Field help text ── */
+/*  Field help text  */
 .field-help {
   font-size: 11px;
   line-height: 1.55;
@@ -1085,7 +1088,7 @@ textarea {
   color: var(--text2);
 }
 
-/* ── Footer / License ── */
+/*  Footer / License  */
 .app-footer {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -1142,4 +1145,144 @@ textarea {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   white-space: pre-wrap;
+}
+
+/* Responsive / Mobile */
+
+@media (max-width: 768px) {
+  /* Header */
+  .header-inner {
+    padding: 0 12px;
+    height: 48px;
+  }
+  .logo-text {
+    font-size: 14px;
+  }
+  .logo-sub {
+    display: none;
+  }
+
+  /* Mode buttons */
+  .mode-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  /* Toolbar */
+  .mode-toolbar-inner {
+    padding: 6px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .mode-toolbar-right {
+    flex-wrap: wrap;
+  }
+
+  /* Main layout — stack vertically */
+  .app-main {
+    flex-direction: column;
+    padding: 16px 12px;
+    gap: 16px;
+  }
+  .editor-pane {
+      gap: 16px;
+      width: 100%;
+  }
+  .editor-pane.with-preview {
+    max-width: 100%;
+  }
+  .preview-pane {
+    width: 100%;
+    position: static;
+    max-height: none;
+  }
+  .preview-panel {
+    max-height: 70vh;
+    overflow: auto;
+  }
+
+  /* Form grid — single column */
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Card padding */
+  .meta-form,
+  .payloads-section {
+    padding: 14px;
+  }
+
+  /* Picker panel — bottom sheet */
+  .payload-picker {
+    position: static;
+  }
+  .picker-panel {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    max-height: 50vh;
+    border-radius: 12px 12px 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .picker-header {
+    display: flex;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface3);
+  }
+  .picker-close {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 0;
+  }
+
+  /* Payload headers */
+  .payload-form-header {
+    flex-wrap: wrap;
+  }
+
+  /* Footer */
+  .app-footer {
+    padding: 16px 12px 24px;
+  }
+  .footer-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 0 8px;
+  }
+  .mode-btn {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+  .mode-toolbar-inner {
+    padding: 6px 8px;
+  }
+  .app-main {
+    padding: 10px 8px;
+    gap: 12px;
+  }
+  .meta-form,
+  .payloads-section {
+    padding: 10px;
+  }
+  .preview-code {
+    font-size: 10px;
+  }
+  .picker-panel {
+    left: 8px;
+    right: 8px;
+  }
 }

@@ -12,6 +12,7 @@ npm run build
 ```
 
 If you cloned without `--recurse-submodules`:
+
 ```bash
 git submodule update --init --recursive
 ```

@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { MDMMode } from './components/MDMMode'
-import { DeclarativeMode } from './components/DeclarativeMode'
-import schemasData from './schemas.json'
+import { useState } from "react";
+import { MDMMode } from "./components/MDMMode";
+import { DeclarativeMode } from "./components/DeclarativeMode";
+import schemasData from "./schemas.json";
 
 export default function App() {
-  const [mode, setMode] = useState('mdm')
+  const [mode, setMode] = useState("mdm");
 
   return (
     <div className="app">
@@ -12,20 +12,32 @@ export default function App() {
         <div className="header-inner">
           <div className="logo">
             <span className="logo-icon">⚙</span>
-            <span className="logo-text">mobileconfig <span className="logo-sub">builder</span></span>
+            <span className="logo-text">
+              mobileconfig <span className="logo-sub">builder</span>
+            </span>
           </div>
           <div className="mode-switcher">
-            <button className={`mode-btn ${mode==='mdm'?'active':''}`} onClick={()=>setMode('mdm')}>
+            <button
+              className={`mode-btn ${mode === "mdm" ? "active" : ""}`}
+              onClick={() => setMode("mdm")}
+            >
               MDM Profiles
             </button>
-            <button className={`mode-btn ${mode==='declarative'?'active':''}`} onClick={()=>setMode('declarative')}>
+            <button
+              className={`mode-btn ${mode === "declarative" ? "active" : ""}`}
+              onClick={() => setMode("declarative")}
+            >
               Declarative
             </button>
           </div>
         </div>
       </header>
 
-      {mode === 'mdm' ? <MDMMode schemasData={schemasData} /> : <DeclarativeMode schemasData={schemasData} />}
+      {mode === "mdm" ? (
+        <MDMMode schemasData={schemasData} />
+      ) : (
+        <DeclarativeMode schemasData={schemasData} />
+      )}
 
       <footer className="app-footer">
         <div className="footer-info">
@@ -33,7 +45,13 @@ export default function App() {
           <span className="footer-sep">·</span>
           <span>AGPL-3.0</span>
           <span className="footer-sep">·</span>
-          <a href="https://github.com/dantecatalfamo/mobileconfig-builder" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a
+            href="https://github.com/dantecatalfamo/mobileconfig-builder"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
         </div>
         {schemasData._appleLicense && (
           <details className="license-details">
@@ -43,5 +61,5 @@ export default function App() {
         )}
       </footer>
     </div>
-  )
+  );
 }

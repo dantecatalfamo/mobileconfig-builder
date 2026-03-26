@@ -10,28 +10,31 @@
  *   npm run update-schemas:pull     # git pull submodule first, then regenerate
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { execSync } from 'child_process'
-import yaml from 'js-yaml'
+import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { execSync } from "child_process";
+import yaml from "js-yaml";
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const ROOT = join(__dirname, '..')
-const DM = join(ROOT, 'device-management')
-const PROFILES_DIR = join(DM, 'mdm', 'profiles')
-const DECLARATIVE_DIR = join(DM, 'declarative', 'declarations')
-const LICENSE_FILE = join(DM, 'LICENSE.txt')
-const OUT_FILE = join(ROOT, 'src', 'schemas.json')
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, "..");
+const DM = join(ROOT, "device-management");
+const PROFILES_DIR = join(DM, "mdm", "profiles");
+const DECLARATIVE_DIR = join(DM, "declarative", "declarations");
+const LICENSE_FILE = join(DM, "LICENSE.txt");
+const OUT_FILE = join(ROOT, "src", "schemas.json");
 
 // ── Optional pull ─────────────────────────────────────────────────────────────
-const shouldPull = process.argv.includes('--pull')
+const shouldPull = process.argv.includes("--pull");
 if (shouldPull) {
-  console.log('Pulling latest Apple device-management schema…')
+  console.log("Pulling latest Apple device-management schema…");
   try {
-    execSync('git submodule update --remote --merge device-management', { cwd: ROOT, stdio: 'inherit' })
+    execSync("git submodule update --remote --merge device-management", {
+      cwd: ROOT,
+      stdio: "inherit",
+    });
   } catch {
-    console.error('git submodule update failed — continuing with local copy.')
+    console.error("git submodule update failed — continuing with local copy.");
   }
 }
 
@@ -50,107 +53,134 @@ if (shouldPull) {
  */
 function deref(obj, maxRecursion = 1) {
   function walk(o, stack, depth) {
-    if (o === null || typeof o !== 'object') return o
+    if (o === null || typeof o !== "object") return o;
     if (stack.has(o)) {
-      if (depth < maxRecursion) return walk(o, new WeakSet(), depth + 1)
-      return null
+      if (depth < maxRecursion) return walk(o, new WeakSet(), depth + 1);
+      return null;
     }
-    stack.add(o)
+    stack.add(o);
     const result = Array.isArray(o)
       ? o.map(v => walk(v, stack, depth))
-      : Object.fromEntries(Object.entries(o).map(([k, v]) => [k, walk(v, stack, depth)]))
-    stack.delete(o)
-    return result
+      : Object.fromEntries(
+          Object.entries(o).map(([k, v]) => [k, walk(v, stack, depth)]),
+        );
+    stack.delete(o);
+    return result;
   }
-  return walk(obj, new WeakSet(), 0)
+  return walk(obj, new WeakSet(), 0);
 }
 
 function loadYaml(filepath) {
   try {
-    return yaml.load(readFileSync(filepath, 'utf8'))
+    return yaml.load(readFileSync(filepath, "utf8"));
   } catch (e) {
-    console.warn(`  WARN: could not parse ${filepath}: ${e.message}`)
-    return null
+    console.warn(`  WARN: could not parse ${filepath}: ${e.message}`);
+    return null;
   }
 }
 
 function loadDir(dir, filter) {
-  const results = {}
-  const skipped = []
-  let files
-  try { files = readdirSync(dir) } catch { return { results, skipped } }
+  const results = {};
+  const skipped = [];
+  let files;
+  try {
+    files = readdirSync(dir);
+  } catch {
+    return { results, skipped };
+  }
   for (const file of files.filter(filter).sort()) {
-    const id = file.replace(/\.yaml$/, '')
-    const data = loadYaml(join(dir, file))
-    if (!data || !data.payload || !data.payloadkeys) { skipped.push(file); continue }
+    const id = file.replace(/\.yaml$/, "");
+    const data = loadYaml(join(dir, file));
+    if (!data || !data.payload || !data.payloadkeys) {
+      skipped.push(file);
+      continue;
+    }
     try {
-      const clean = deref(data)
-      JSON.stringify(clean)
-      results[id] = clean
+      const clean = deref(data);
+      JSON.stringify(clean);
+      results[id] = clean;
     } catch (e) {
-      console.warn(`  WARN: skipping ${file} — ${e.message}`)
-      skipped.push(file)
+      console.warn(`  WARN: skipping ${file} — ${e.message}`);
+      skipped.push(file);
     }
   }
-  return { results, skipped }
+  return { results, skipped };
 }
 
 /** Recursively load all .yaml files under a directory tree */
-function loadDirRecursive(dir, idPrefix = '') {
-  const results = {}
-  const skipped = []
-  let entries
-  try { entries = readdirSync(dir) } catch { return { results, skipped } }
+function loadDirRecursive(dir, idPrefix = "") {
+  const results = {};
+  const skipped = [];
+  let entries;
+  try {
+    entries = readdirSync(dir);
+  } catch {
+    return { results, skipped };
+  }
   for (const entry of entries.sort()) {
-    const fullPath = join(dir, entry)
+    const fullPath = join(dir, entry);
     if (statSync(fullPath).isDirectory()) {
-      const sub = loadDirRecursive(fullPath, idPrefix ? `${idPrefix}/${entry}` : entry)
-      Object.assign(results, sub.results)
-      skipped.push(...sub.skipped)
-    } else if (entry.endsWith('.yaml') && entry !== 'declarationbase.yaml') {
-      const id = entry.replace(/\.yaml$/, '')
-      const data = loadYaml(fullPath)
-      if (!data || !data.payload || !data.payloadkeys) { skipped.push(entry); continue }
+      const sub = loadDirRecursive(
+        fullPath,
+        idPrefix ? `${idPrefix}/${entry}` : entry,
+      );
+      Object.assign(results, sub.results);
+      skipped.push(...sub.skipped);
+    } else if (entry.endsWith(".yaml") && entry !== "declarationbase.yaml") {
+      const id = entry.replace(/\.yaml$/, "");
+      const data = loadYaml(fullPath);
+      if (!data || !data.payload || !data.payloadkeys) {
+        skipped.push(entry);
+        continue;
+      }
       try {
-        const clean = deref(data)
-        JSON.stringify(clean)
+        const clean = deref(data);
+        JSON.stringify(clean);
         // Tag which category this declaration belongs to
-        clean._category = idPrefix || 'other'
-        results[id] = clean
+        clean._category = idPrefix || "other";
+        results[id] = clean;
       } catch (e) {
-        console.warn(`  WARN: skipping ${entry} — ${e.message}`)
-        skipped.push(entry)
+        console.warn(`  WARN: skipping ${entry} — ${e.message}`);
+        skipped.push(entry);
       }
     }
   }
-  return { results, skipped }
+  return { results, skipped };
 }
 
 // ── MDM profiles ──────────────────────────────────────────────────────────────
-console.log('Reading MDM profiles from:', PROFILES_DIR)
+console.log("Reading MDM profiles from:", PROFILES_DIR);
 
-const common  = loadYaml(join(PROFILES_DIR, 'CommonPayloadKeys.yaml'))
-const topLevel = loadYaml(join(PROFILES_DIR, 'TopLevel.yaml'))
+const common = loadYaml(join(PROFILES_DIR, "CommonPayloadKeys.yaml"));
+const topLevel = loadYaml(join(PROFILES_DIR, "TopLevel.yaml"));
 const { results: profiles, skipped: profilesSkipped } = loadDir(
-  PROFILES_DIR, f => f.startsWith('com.apple.') && f.endsWith('.yaml')
-)
+  PROFILES_DIR,
+  f => f.startsWith("com.apple.") && f.endsWith(".yaml"),
+);
 
-console.log(`  Profiles: ${Object.keys(profiles).length}  Skipped: ${profilesSkipped.length}`)
+console.log(
+  `  Profiles: ${Object.keys(profiles).length}  Skipped: ${profilesSkipped.length}`,
+);
 
 // ── Declarative declarations ──────────────────────────────────────────────────
-console.log('Reading Declarative declarations from:', DECLARATIVE_DIR)
+console.log("Reading Declarative declarations from:", DECLARATIVE_DIR);
 
-const base = loadYaml(join(DECLARATIVE_DIR, 'declarationbase.yaml'))
-const { results: declarations, skipped: declarationsSkipped } = loadDirRecursive(DECLARATIVE_DIR)
+const base = loadYaml(join(DECLARATIVE_DIR, "declarationbase.yaml"));
+const { results: declarations, skipped: declarationsSkipped } =
+  loadDirRecursive(DECLARATIVE_DIR);
 
-console.log(`  Declarations: ${Object.keys(declarations).length}  Skipped: ${declarationsSkipped.length}`)
+console.log(
+  `  Declarations: ${Object.keys(declarations).length}  Skipped: ${declarationsSkipped.length}`,
+);
 
 // ── Read license ─────────────────────────────────────────────────────────────
-let appleLicense = ''
+let appleLicense = "";
 try {
-  appleLicense = readFileSync(LICENSE_FILE, 'utf8').trim()
+  appleLicense = readFileSync(LICENSE_FILE, "utf8").trim();
 } catch {
-  console.warn('WARN: could not read LICENSE.txt from device-management submodule')
+  console.warn(
+    "WARN: could not read LICENSE.txt from device-management submodule",
+  );
 }
 
 // ── Write bundle ──────────────────────────────────────────────────────────────
@@ -159,17 +189,17 @@ const bundle = {
     generatedAt: new Date().toISOString(),
     profileCount: Object.keys(profiles).length,
     declarationCount: Object.keys(declarations).length,
-    source: 'https://github.com/apple/device-management',
+    source: "https://github.com/apple/device-management",
   },
   _appleLicense: appleLicense,
-  commonPayloadKeys: deref(common?.payloadkeys  ?? []),
-  topLevel:          deref(topLevel?.payloadkeys ?? []),
-  declarationBase:   deref(base?.payloadkeys     ?? []),
+  commonPayloadKeys: deref(common?.payloadkeys ?? []),
+  topLevel: deref(topLevel?.payloadkeys ?? []),
+  declarationBase: deref(base?.payloadkeys ?? []),
   profiles,
   declarations,
-}
+};
 
-writeFileSync(OUT_FILE, JSON.stringify(bundle, null, 2))
+writeFileSync(OUT_FILE, JSON.stringify(bundle, null, 2));
 
-const sizeKB = Math.round(readFileSync(OUT_FILE).length / 1024)
-console.log(`✓ Wrote ${OUT_FILE}  (${sizeKB} KB)`)
+const sizeKB = Math.round(readFileSync(OUT_FILE).length / 1024);
+console.log(`✓ Wrote ${OUT_FILE}  (${sizeKB} KB)`);

@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { generateDeclarationJSON } from "../lib/serialize";
+import { parseDeclarationJSON } from "../lib/parse";
 import { validateDeclarative } from "../lib/validation";
 import { buildDefaultValues } from "../lib/schema";
 import { FieldLabel, LabelWithHelp } from "./FieldLabel";
@@ -7,6 +8,10 @@ import { FieldInput } from "./FormFields";
 import { ItemPicker } from "./ItemPicker";
 import { PreviewPanel } from "./PreviewPanel";
 import { OsSupportTable } from "./OsSupportTable";
+import { ImportButton } from "./ImportButton";
+import { ImportWarnings } from "./ImportWarnings";
+
+const DDM_ACCEPT = ".json,application/json";
 
 export function DeclarativeMode({ schemasData }) {
   const [declarations, setDeclarations] = useState([]);
@@ -14,6 +19,53 @@ export function DeclarativeMode({ schemasData }) {
   const [showErrors, setShowErrors] = useState(false);
   const [touched, setTouched] = useState(false);
   const [collapsedIds, setCollapsedIds] = useState(new Set());
+  const [warnings, setWarnings] = useState([]);
+  const [dragActive, setDragActive] = useState(false);
+  const dragCounter = useRef(0);
+
+  const handleImport = text => {
+    if (
+      declarations.length > 0 &&
+      !confirm("Replace the current declarations with the imported ones?")
+    )
+      return;
+    try {
+      const r = parseDeclarationJSON(text, schemasData);
+      setDeclarations(r.declarations);
+      setWarnings(r.warnings);
+      setTouched(true);
+    } catch (e) {
+      setWarnings([`Import failed: ${e.message}`]);
+    }
+  };
+
+  const onDragEnter = e => {
+    e.preventDefault();
+    if (!e.dataTransfer?.types?.includes("Files")) return;
+    dragCounter.current++;
+    setDragActive(true);
+  };
+  const onDragOver = e => {
+    e.preventDefault();
+  };
+  const onDragLeave = e => {
+    e.preventDefault();
+    dragCounter.current--;
+    if (dragCounter.current <= 0) {
+      dragCounter.current = 0;
+      setDragActive(false);
+    }
+  };
+  const onDrop = async e => {
+    e.preventDefault();
+    dragCounter.current = 0;
+    setDragActive(false);
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    handleImport(text);
+  };
+
   const toggleCollapsed = id =>
     setCollapsedIds(s => {
       const n = new Set(s);
@@ -88,6 +140,11 @@ export function DeclarativeMode({ schemasData }) {
               {declarations.length} declaration
               {declarations.length !== 1 ? "s" : ""}
             </span>
+            <ImportButton
+              onImport={handleImport}
+              accept={DDM_ACCEPT}
+              label="Import JSON"
+            />
             <span className="decl-note">
               Declarative Device Management · outputs JSON
             </span>
@@ -117,7 +174,24 @@ export function DeclarativeMode({ schemasData }) {
       </div>
 
       <main className="app-main">
-        <div className={`editor-pane ${showPreview ? "with-preview" : ""}`}>
+        <div
+          className={`editor-pane ${showPreview ? "with-preview" : ""} ${dragActive ? "drag-active" : ""}`}
+          onDragEnter={onDragEnter}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
+        >
+          {dragActive && (
+            <div className="import-drop-overlay">
+              <div className="import-drop-message">
+                Drop declarations JSON to import
+              </div>
+            </div>
+          )}
+          <ImportWarnings
+            warnings={warnings}
+            onClose={() => setWarnings([])}
+          />
           <div className="payloads-section">
             <div className="payloads-header">
               <h2>Declarations</h2>

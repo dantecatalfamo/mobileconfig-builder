@@ -1,25 +1,86 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { generateMobileconfig } from "../lib/plist";
+import { parseMobileconfig } from "../lib/parse";
 import { validateMDM } from "../lib/validation";
 import { buildDefaultValues } from "../lib/schema";
 import { LabelWithHelp } from "./FieldLabel";
 import { ItemForm } from "./ItemForm";
 import { ItemPicker } from "./ItemPicker";
 import { PreviewPanel } from "./PreviewPanel";
+import { ImportButton } from "./ImportButton";
+import { ImportWarnings } from "./ImportWarnings";
+
+const DEFAULT_META = {
+  displayName: "",
+  identifier: "com.example.profile",
+  organization: "",
+  description: "",
+  scope: "System",
+  removalDisallowed: false,
+};
+const MDM_ACCEPT =
+  ".mobileconfig,application/x-apple-aspen-config,application/xml,text/xml";
 
 export function MDMMode({ schemasData }) {
-  const [meta, setMeta] = useState({
-    displayName: "",
-    identifier: "com.example.profile",
-    organization: "",
-    description: "",
-    scope: "System",
-    removalDisallowed: false,
-  });
+  const [meta, setMeta] = useState(DEFAULT_META);
   const [payloads, setPayloads] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [warnings, setWarnings] = useState([]);
+  const [dragActive, setDragActive] = useState(false);
+  const dragCounter = useRef(0);
+
+  const hasContent =
+    payloads.length > 0 ||
+    meta.displayName !== DEFAULT_META.displayName ||
+    meta.identifier !== DEFAULT_META.identifier ||
+    meta.organization !== DEFAULT_META.organization ||
+    meta.description !== DEFAULT_META.description;
+
+  const handleImport = text => {
+    if (
+      hasContent &&
+      !confirm("Replace the current profile with the imported one?")
+    )
+      return;
+    try {
+      const r = parseMobileconfig(text, schemasData);
+      setMeta(r.meta);
+      setPayloads(r.payloads);
+      setWarnings(r.warnings);
+      setTouched(true);
+    } catch (e) {
+      setWarnings([`Import failed: ${e.message}`]);
+    }
+  };
+
+  const onDragEnter = e => {
+    e.preventDefault();
+    if (!e.dataTransfer?.types?.includes("Files")) return;
+    dragCounter.current++;
+    setDragActive(true);
+  };
+  const onDragOver = e => {
+    e.preventDefault();
+  };
+  const onDragLeave = e => {
+    e.preventDefault();
+    dragCounter.current--;
+    if (dragCounter.current <= 0) {
+      dragCounter.current = 0;
+      setDragActive(false);
+    }
+  };
+  const onDrop = async e => {
+    e.preventDefault();
+    dragCounter.current = 0;
+    setDragActive(false);
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    handleImport(text);
+  };
 
   const addPayload = id => {
     const schema = schemasData.profiles[id];
@@ -101,6 +162,11 @@ export function MDMMode({ schemasData }) {
             <span className="payload-count">
               {payloads.length} payload{payloads.length !== 1 ? "s" : ""}
             </span>
+            <ImportButton
+              onImport={handleImport}
+              accept={MDM_ACCEPT}
+              label="Import .mobileconfig"
+            />
           </div>
           <div className="mode-toolbar-right">
             <button
@@ -129,7 +195,24 @@ export function MDMMode({ schemasData }) {
       </div>
 
       <main className="app-main">
-        <div className={`editor-pane ${showPreview ? "with-preview" : ""}`}>
+        <div
+          className={`editor-pane ${showPreview ? "with-preview" : ""} ${dragActive ? "drag-active" : ""}`}
+          onDragEnter={onDragEnter}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
+        >
+          {dragActive && (
+            <div className="import-drop-overlay">
+              <div className="import-drop-message">
+                Drop .mobileconfig to import
+              </div>
+            </div>
+          )}
+          <ImportWarnings
+            warnings={warnings}
+            onClose={() => setWarnings([])}
+          />
           {/* Profile identity */}
           <div
             className={`meta-form ${showErrors && metaErrors.length ? "has-errors" : ""}`}

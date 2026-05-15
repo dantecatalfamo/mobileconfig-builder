@@ -27,15 +27,22 @@ export function ArrayField({
       </span>
     );
   }
+  // Be tolerant of imported scalars where the schema expects an array (Apple
+  // SAN keys, for example, accept "string or array of strings").
+  const arr = Array.isArray(value)
+    ? value
+    : value === undefined || value === null || value === ""
+      ? []
+      : [value];
   const itemSchema = keyDef.subkeys?.[0];
   const itemIsDic = itemSchema?.type === "<dictionary>";
   const itemIsArr = itemSchema?.type === "<array>";
-  const add = () => onChange([...value, itemIsDic ? {} : itemIsArr ? [] : ""]);
-  const remove = i => onChange(value.filter((_, idx) => idx !== i));
-  const update = (i, v) => onChange(value.map((x, idx) => (idx === i ? v : x)));
+  const add = () => onChange([...arr, itemIsDic ? {} : itemIsArr ? [] : ""]);
+  const remove = i => onChange(arr.filter((_, idx) => idx !== i));
+  const update = (i, v) => onChange(arr.map((x, idx) => (idx === i ? v : x)));
   return (
     <div className="array-field">
-      {value.map((item, i) => (
+      {arr.map((item, i) => (
         <div key={i} className="array-item">
           {itemIsDic ? (
             <div className="array-dict-item">

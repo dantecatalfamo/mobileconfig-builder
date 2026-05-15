@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generatedAt": "2026-03-25T20:45:15.632Z",
+    "generatedAt": "2026-05-13T18:56:39.853Z",
     "profileCount": 123,
     "declarationCount": 51,
     "source": "https://github.com/apple/device-management"
@@ -24511,6 +24511,20 @@
               "content": "A bitmask indicating the use of the key. Possible values:\n\n- `1`: Signing\n- `4`: Encryption\n\nSome certificate authorities, such as Windows CA, support only encryption or signing, but not both at the same time."
             },
             {
+              "key": "ExtendedKeyUsage",
+              "title": "Extended Key Usage",
+              "type": "<array>",
+              "presence": "optional",
+              "content": "An array of OID strings the device requests as the certificate's extended key usages (e.g. `1.3.6.1.5.5.7.3.2` for TLS client auth). Local override — not in Apple's upstream SCEP YAML.",
+              "subkeys": [
+                {
+                  "key": "OID",
+                  "title": "OID",
+                  "type": "<string>"
+                }
+              ]
+            },
+            {
               "key": "CAFingerprint",
               "title": "Fingerprint",
               "type": "<data>",
@@ -24553,30 +24567,58 @@
                 {
                   "key": "rfc822Name",
                   "title": "RFC 822 Name",
-                  "type": "<string>",
+                  "type": "<array>",
                   "presence": "optional",
-                  "content": "The RFC 822 (email address) string."
+                  "content": "The RFC 822 (email address) string. Accepts one or more values.",
+                  "subkeys": [
+                    {
+                      "key": "rfc822Name",
+                      "title": "RFC 822 Name",
+                      "type": "<string>"
+                    }
+                  ]
                 },
                 {
                   "key": "dNSName",
                   "title": "DNS Name",
-                  "type": "<string>",
+                  "type": "<array>",
                   "presence": "optional",
-                  "content": "The DNS name."
+                  "content": "The DNS name. Accepts one or more values.",
+                  "subkeys": [
+                    {
+                      "key": "dNSName",
+                      "title": "DNS Name",
+                      "type": "<string>"
+                    }
+                  ]
                 },
                 {
                   "key": "uniformResourceIdentifier",
                   "title": "URI",
-                  "type": "<string>",
+                  "type": "<array>",
                   "presence": "optional",
-                  "content": "The Uniform Resource Identifier."
+                  "content": "The Uniform Resource Identifier. Accepts one or more values.",
+                  "subkeys": [
+                    {
+                      "key": "uniformResourceIdentifier",
+                      "title": "URI",
+                      "type": "<string>"
+                    }
+                  ]
                 },
                 {
                   "key": "ntPrincipalName",
                   "title": "NT Principal Name",
-                  "type": "<string>",
+                  "type": "<array>",
                   "presence": "optional",
-                  "content": "The NT principal name. Use an other name OID set to `1.3.6.1.4.1.311.20.2.3`."
+                  "content": "The NT principal name. Use an other name OID set to `1.3.6.1.4.1.311.20.2.3`. Accepts one or more values.",
+                  "subkeys": [
+                    {
+                      "key": "ntPrincipalName",
+                      "title": "NT Principal Name",
+                      "type": "<string>"
+                    }
+                  ]
                 }
               ]
             },

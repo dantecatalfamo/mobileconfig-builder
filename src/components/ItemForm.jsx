@@ -70,6 +70,36 @@ export function ItemForm({
             </div>
           )}
           <div className="fields">
+            <div className="field">
+              <FieldLabel
+                title="Display Name"
+                keyName="PayloadDisplayName"
+                description="A human-readable name shown for this individual payload in Settings. Optional — distinct from the profile-level Display Name."
+              />
+              <input
+                type="text"
+                value={values.PayloadDisplayName ?? ""}
+                onChange={e =>
+                  handleChange("PayloadDisplayName", e.target.value)
+                }
+                placeholder={title || "Payload display name"}
+              />
+            </div>
+            <div className="field">
+              <FieldLabel
+                title="Description"
+                keyName="PayloadDescription"
+                description="A short description of this individual payload. Optional — distinct from the profile-level Description."
+              />
+              <input
+                type="text"
+                value={values.PayloadDescription ?? ""}
+                onChange={e =>
+                  handleChange("PayloadDescription", e.target.value)
+                }
+                placeholder="Payload description"
+              />
+            </div>
             {!payloadkeys?.length && (
               <p className="no-keys">No configurable keys for this payload.</p>
             )}

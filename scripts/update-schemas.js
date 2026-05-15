@@ -148,6 +148,56 @@ function loadDirRecursive(dir, idPrefix = "") {
   return { results, skipped };
 }
 
+// ── Local schema patches ──────────────────────────────────────────────────────
+// Apple's upstream YAMLs miss a few real-world fields. These patches inject the
+// missing pieces after YAML load so they survive `update-schemas:pull`.
+
+function findKey(payloadkeys, key) {
+  return (payloadkeys || []).find(k => k.key === key) || null;
+}
+
+function applyLocalPatches(profiles) {
+  const scep = profiles["com.apple.security.scep"];
+  if (!scep) return;
+  const content = findKey(scep.payloadkeys, "PayloadContent");
+  if (!content?.subkeys) return;
+
+  // 1. Add ExtendedKeyUsage (array of OID strings) — mirrors ACME's field.
+  if (!findKey(content.subkeys, "ExtendedKeyUsage")) {
+    const ekuField = {
+      key: "ExtendedKeyUsage",
+      title: "Extended Key Usage",
+      type: "<array>",
+      presence: "optional",
+      content:
+        "An array of OID strings the device requests as the certificate's extended key usages (e.g. `1.3.6.1.5.5.7.3.2` for TLS client auth). Local override — not in Apple's upstream SCEP YAML.",
+      subkeys: [{ key: "OID", title: "OID", type: "<string>" }],
+    };
+    const after = content.subkeys.findIndex(k => k.key === "Key Usage");
+    if (after >= 0) content.subkeys.splice(after + 1, 0, ekuField);
+    else content.subkeys.push(ekuField);
+  }
+
+  // 2. SubjectAltName subkeys accept "string or array of strings" per Apple
+  //    docs. The YAML only types them as <string>. Promote to <array> of
+  //    <string> so multi-value SANs round-trip correctly.
+  const san = findKey(content.subkeys, "SubjectAltName");
+  if (san?.subkeys) {
+    for (const sk of san.subkeys) {
+      if (sk.type === "<string>") {
+        const origTitle = sk.title;
+        const origKey = sk.key;
+        const origContent = sk.content;
+        sk.type = "<array>";
+        sk.content = origContent
+          ? `${origContent} Accepts one or more values.`
+          : "Accepts one or more values.";
+        sk.subkeys = [{ key: origKey, title: origTitle, type: "<string>" }];
+      }
+    }
+  }
+}
+
 // ── MDM profiles ──────────────────────────────────────────────────────────────
 console.log("Reading MDM profiles from:", PROFILES_DIR);
 
@@ -161,6 +211,8 @@ const { results: profiles, skipped: profilesSkipped } = loadDir(
 console.log(
   `  Profiles: ${Object.keys(profiles).length}  Skipped: ${profilesSkipped.length}`,
 );
+
+applyLocalPatches(profiles);
 
 // ── Declarative declarations ──────────────────────────────────────────────────
 console.log("Reading Declarative declarations from:", DECLARATIVE_DIR);

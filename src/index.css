@@ -542,6 +542,50 @@ textarea {
   color: var(--text3);
   font-style: italic;
 }
+/*  Arbitrary-name (ANY) entries  */
+.any-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.any-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 10px;
+  border-left: 2px solid var(--border2);
+}
+.any-entry-head {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.any-key-input {
+  flex: 1;
+  font-family: var(--font-mono);
+}
+.any-entries.field-missing > .add-btn {
+  border-color: var(--red);
+  color: var(--red);
+}
+.any-value {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.any-value pre {
+  margin: 0;
+  padding: 8px;
+  max-height: 200px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text2);
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
 .dict-with-remove {
   display: flex;
   flex-direction: column;

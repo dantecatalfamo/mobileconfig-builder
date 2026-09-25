@@ -1,3 +1,5 @@
+import { typedValue, isTyped } from "./plistValue";
+
 function parsePlistNode(node) {
   const tag = node.tagName;
   switch (tag) {
@@ -12,9 +14,9 @@ function parsePlistNode(node) {
     case "string":
       return node.textContent;
     case "date":
-      return node.textContent;
+      return typedValue("<date>", node.textContent);
     case "data":
-      return node.textContent.replace(/\s+/g, "");
+      return typedValue("<data>", node.textContent.replace(/\s+/g, ""));
     case "array": {
       const items = [];
       for (const child of node.children) items.push(parsePlistNode(child));
@@ -35,6 +37,36 @@ function parsePlistNode(node) {
     }
   }
   return null;
+}
+
+// Unwrap typed values where the schema already says <data>/<date>, so form
+// fields get plain strings; leave them wrapped everywhere else.
+function unwrapTyped(value, keyDef) {
+  if (isTyped(value))
+    return keyDef?.type === value.$plistType ? value.value : value;
+  if (Array.isArray(value)) {
+    const item = keyDef?.type === "<array>" ? keyDef.subkeys?.[0] : undefined;
+    return value.map(v => unwrapTyped(v, item));
+  }
+  if (value && typeof value === "object") {
+    return unwrapDict(
+      value,
+      keyDef?.type === "<dictionary>" ? keyDef.subkeys : [],
+    );
+  }
+  return value;
+}
+
+function unwrapDict(obj, subkeys) {
+  const byKey = Object.fromEntries(
+    (subkeys || []).filter(s => s.key).map(s => [s.key, s]),
+  );
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => [
+      k,
+      unwrapTyped(v, (k !== "ANY" && byKey[k]) || byKey.ANY || null),
+    ]),
+  );
 }
 
 export function parseMobileconfig(xml, schemasData) {
@@ -75,7 +107,10 @@ export function parseMobileconfig(xml, schemasData) {
       warnings.push(`Unknown payload type "${payloadType}" — skipped.`);
       continue;
     }
-    const values = { ...entry };
+    const values = unwrapDict(
+      entry,
+      schemasData.profiles[payloadType].payloadkeys,
+    );
     delete values.PayloadType;
     delete values.PayloadVersion;
     delete values.PayloadUUID;

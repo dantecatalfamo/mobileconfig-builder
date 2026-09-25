@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { FieldLabel } from "./FieldLabel";
-import { FieldInput } from "./FormFields";
+import { AnyEntries, FieldInput } from "./FormFields";
+import { anyEntryKeys } from "../lib/validation";
 import { OsSupportTable } from "./OsSupportTable";
 
 export function ItemForm({
@@ -16,6 +17,13 @@ export function ItemForm({
   payloadSupportedOS,
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const anyDef = payloadkeys?.find(k => k.key === "ANY");
+  const namedKeys = (payloadkeys || []).filter(k => k.key !== "ANY");
+  const knownKeys = [
+    ...namedKeys.map(k => k.key),
+    "PayloadDisplayName",
+    "PayloadDescription",
+  ];
   const handleChange = useCallback(
     (key, val) => onChange({ ...values, [key]: val }),
     [values, onChange],
@@ -103,7 +111,7 @@ export function ItemForm({
             {!payloadkeys?.length && (
               <p className="no-keys">No configurable keys for this payload.</p>
             )}
-            {(payloadkeys || []).map(keyDef => {
+            {namedKeys.map(keyDef => {
               const isMissing = errors.includes(keyDef.title || keyDef.key);
               return (
                 <div
@@ -129,6 +137,27 @@ export function ItemForm({
                 </div>
               );
             })}
+            {anyDef && (
+              <div className="field">
+                <FieldLabel
+                  title={anyDef.title || "Additional keys"}
+                  description={anyDef.content}
+                />
+                <AnyEntries
+                  anyDef={anyDef}
+                  knownKeys={knownKeys}
+                  value={values}
+                  onChange={onChange}
+                  showErrors={showErrors}
+                  payloadSupportedOS={payloadSupportedOS}
+                  missing={
+                    showErrors &&
+                    anyDef.presence === "required" &&
+                    !anyEntryKeys([], values, knownKeys).length
+                  }
+                />
+              </div>
+            )}
           </div>
         </>
       )}

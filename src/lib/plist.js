@@ -1,3 +1,5 @@
+import { isTyped } from "./plistValue";
+
 function escapeXml(s) {
   return String(s)
     .replace(/&/g, "&amp;")
@@ -14,6 +16,59 @@ function ind(n) {
   return "\t".repeat(n);
 }
 
+// Plist type for a value with no usable schema definition (unknown or
+// arbitrary-name keys, <any>, or imported data whose shape differs from the
+// schema), so imported profiles round-trip without losing data.
+function inferType(value) {
+  if (isTyped(value)) return value.$plistType;
+  if (typeof value === "boolean") return "<boolean>";
+  if (typeof value === "number")
+    return Number.isInteger(value) ? "<integer>" : "<real>";
+  if (Array.isArray(value)) return "<array>";
+  if (typeof value === "object") return "<dictionary>";
+  return "<string>";
+}
+
+function fitsType(value, type) {
+  switch (type) {
+    case "<array>":
+      return Array.isArray(value);
+    case "<dictionary>":
+      return (
+        typeof value === "object" && !Array.isArray(value) && !isTyped(value)
+      );
+    case "<boolean>":
+      return (
+        typeof value === "boolean" || value === "true" || value === "false"
+      );
+    case "<integer>":
+    case "<real>":
+      return typeof value !== "object" && !isNaN(Number(value));
+    case "<string>":
+      return typeof value === "string";
+    case "<date>":
+    case "<data>":
+      return typeof value === "string" || value?.$plistType === type;
+    default:
+      return false;
+  }
+}
+
+function resolveType(value, keyDef) {
+  return keyDef && fitsType(value, keyDef.type)
+    ? keyDef.type
+    : inferType(value);
+}
+
+// Schema for a dict entry: the named sub-key, else the wildcard ANY sub-key.
+function schemaLookup(subkeyDefs = []) {
+  const byKey = Object.fromEntries(
+    (subkeyDefs || []).filter(s => s.key).map(s => [s.key, s]),
+  );
+  const anyDef = byKey.ANY;
+  return key => (key !== "ANY" && byKey[key]) || anyDef;
+}
+
 function valueToPlistLines(value, type, depth, subkeys = []) {
   const pad = ind(depth);
   if (value === undefined || value === null || value === "") return [];
@@ -28,53 +83,50 @@ function valueToPlistLines(value, type, depth, subkeys = []) {
     const tag = type === "<real>" ? "real" : "integer";
     return [`${pad}<${tag}>${num}</${tag}>`];
   }
-  if (type === "<date>") return [`${pad}<date>${escapeXml(value)}</date>`];
-  if (type === "<data>") return [`${pad}<data>${escapeXml(value)}</data>`];
+  if (type === "<date>" || type === "<data>") {
+    const tag = type.slice(1, -1);
+    const raw = isTyped(value) ? value.value : value;
+    return [`${pad}<${tag}>${escapeXml(raw)}</${tag}>`];
+  }
   if (type === "<array>") {
     if (!Array.isArray(value) || value.length === 0) return [];
-    const itemSchema = subkeys[0];
+    const itemSchema = subkeys?.[0];
     const lines = [`${pad}<array>`];
     for (const item of value) {
       if (item === undefined || item === null || item === "") continue;
-      if (
-        itemSchema?.type === "<dictionary>" ||
-        (typeof item === "object" && !Array.isArray(item))
-      ) {
-        lines.push(
-          ...dictToPlistLines(item, itemSchema?.subkeys || [], depth + 1),
-        );
-      } else {
-        lines.push(
-          ...valueToPlistLines(
-            item,
-            itemSchema?.type || "<string>",
-            depth + 1,
-            itemSchema?.subkeys || [],
-          ),
-        );
-      }
+      lines.push(
+        ...valueToPlistLines(
+          item,
+          resolveType(item, itemSchema),
+          depth + 1,
+          itemSchema?.subkeys || [],
+        ),
+      );
     }
     lines.push(`${pad}</array>`);
     return lines;
   }
   if (type === "<dictionary>") {
     if (typeof value !== "object" || Array.isArray(value)) return [];
-    return dictToPlistLines(value, subkeys, depth);
+    return [
+      `${pad}<dict>`,
+      ...entryLines(value, subkeys, depth + 1),
+      `${pad}</dict>`,
+    ];
   }
   if (typeof value === "object") return [];
   return [`${pad}<string>${escapeXml(String(value))}</string>`];
 }
 
-function dictToPlistLines(obj, subkeyDefs = [], depth) {
-  const pad = ind(depth),
-    inner = ind(depth + 1);
-  const lines = [`${pad}<dict>`];
-  const schemaByKey = Object.fromEntries(
-    (subkeyDefs || []).filter(s => s.key).map(s => [s.key, s]),
-  );
+// <key>/<value> lines for each entry of obj, skipping empty values and
+// optional values equal to their schema default.
+function entryLines(obj, subkeyDefs, depth, skipKeys = []) {
+  const lookup = schemaLookup(subkeyDefs);
+  const lines = [];
   for (const [key, value] of Object.entries(obj)) {
+    if (skipKeys.includes(key)) continue;
     if (value === undefined || value === null || value === "") continue;
-    const sk = schemaByKey[key];
+    const sk = lookup(key);
     if (
       sk &&
       sk.default !== undefined &&
@@ -82,18 +134,15 @@ function dictToPlistLines(obj, subkeyDefs = [], depth) {
       isDefault(value, sk.default)
     )
       continue;
-    const type =
-      sk?.type ||
-      (typeof value === "boolean"
-        ? "<boolean>"
-        : typeof value === "number"
-          ? "<integer>"
-          : "<string>");
-    const vlines = valueToPlistLines(value, type, depth + 1, sk?.subkeys || []);
+    const vlines = valueToPlistLines(
+      value,
+      resolveType(value, sk),
+      depth,
+      sk?.subkeys || [],
+    );
     if (!vlines.length) continue;
-    lines.push(`${inner}<key>${escapeXml(key)}</key>`, ...vlines);
+    lines.push(`${ind(depth)}<key>${escapeXml(key)}</key>`, ...vlines);
   }
-  lines.push(`${pad}</dict>`);
   return lines;
 }
 
@@ -109,11 +158,6 @@ export function generateMobileconfig(schemasData, profileMeta, payloadForms) {
   ];
   for (const form of payloadForms) {
     const payloadUUID = crypto.randomUUID().toUpperCase();
-    const schemaByKey = Object.fromEntries(
-      (schemasData.profiles[form.profileId]?.payloadkeys || [])
-        .filter(s => s.key)
-        .map(s => [s.key, s]),
-    );
     lines.push("\t\t<dict>");
     lines.push(
       "\t\t\t<key>PayloadType</key>",
@@ -128,34 +172,14 @@ export function generateMobileconfig(schemasData, profileMeta, payloadForms) {
       "\t\t\t<key>PayloadIdentifier</key>",
       `\t\t\t<string>${escapeXml(profileMeta.identifier)}.${escapeXml(form.payloadType)}</string>`,
     );
-    for (const [key, value] of Object.entries(form.values)) {
-      if (
-        [
-          "PayloadType",
-          "PayloadVersion",
-          "PayloadUUID",
-          "PayloadIdentifier",
-        ].includes(key)
-      )
-        continue;
-      if (value === undefined || value === null || value === "") continue;
-      const sk = schemaByKey[key];
-      if (
-        sk &&
-        sk.default !== undefined &&
-        sk.presence !== "required" &&
-        isDefault(value, sk.default)
-      )
-        continue;
-      const vlines = valueToPlistLines(
-        value,
-        sk?.type || "<string>",
+    lines.push(
+      ...entryLines(
+        form.values,
+        schemasData.profiles[form.profileId]?.payloadkeys,
         3,
-        sk?.subkeys || [],
-      );
-      if (!vlines.length) continue;
-      lines.push(`\t\t\t<key>${escapeXml(key)}</key>`, ...vlines);
-    }
+        ["PayloadType", "PayloadVersion", "PayloadUUID", "PayloadIdentifier"],
+      ),
+    );
     lines.push("\t\t</dict>");
   }
   lines.push("\t</array>");

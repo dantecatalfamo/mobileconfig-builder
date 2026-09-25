@@ -2,7 +2,7 @@ import { useState, useMemo, useRef } from "react";
 import { generateDeclarationJSON } from "../lib/serialize";
 import { parseDeclarationJSON } from "../lib/parse";
 import { validateDeclarative } from "../lib/validation";
-import { sendBeacon } from "../lib/beacon";
+import { recordMilestone } from "../lib/milestones";
 import { buildDefaultValues } from "../lib/schema";
 import { FieldLabel, LabelWithHelp } from "./FieldLabel";
 import { FieldInput } from "./FormFields";
@@ -130,7 +130,7 @@ export function DeclarativeMode({ schemasData }) {
     a.download = "declarations.json";
     a.click();
     URL.revokeObjectURL(url);
-    sendBeacon("declarations-generated");
+    recordMilestone("declarations-generated");
   };
 
   return (

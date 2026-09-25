@@ -998,6 +998,7 @@ textarea {
 
 /*  Download button (header)  */
 .download-header-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -1036,7 +1037,12 @@ textarea {
   background: rgba(var(--red-rgb), 0.2);
 }
 
+/* Corner bubble, positioned so it never changes the button's size */
 .error-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  box-shadow: 0 0 0 2px var(--surface);
   display: inline-flex;
   align-items: center;
   justify-content: center;

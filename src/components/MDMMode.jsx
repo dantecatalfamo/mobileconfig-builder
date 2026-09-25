@@ -2,6 +2,7 @@ import { useState, useMemo, useRef } from "react";
 import { generateMobileconfig } from "../lib/plist";
 import { parseMobileconfig } from "../lib/parse";
 import { validateMDM } from "../lib/validation";
+import { sendBeacon } from "../lib/beacon";
 import { buildDefaultValues } from "../lib/schema";
 import { LabelWithHelp } from "./FieldLabel";
 import { ItemForm } from "./ItemForm";
@@ -144,6 +145,7 @@ export function MDMMode({ schemasData }) {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+    sendBeacon("mobileconfig-generated");
   };
 
   const setMetaField = (k, v) => {
